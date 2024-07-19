@@ -40,7 +40,7 @@ public class Game {
                         int troopsToPlace = initialTroops/players.length;
                         while(!phasefinished){
                             Object[] action = activePlayer.getLogic().draftPhase(troopsToPlace);
-                            if(moveIsValid("placetroops", action)){
+                            if(actionIsValid("placetroops", action)){
                                 int numTroopsPlaced = (int) action[0];
                                 Province destination = (Province) action[1];
                                 troopsToPlace -= numTroopsPlaced;
@@ -84,7 +84,7 @@ public class Game {
                         int troopsToPlace = calcTroopAllot(activePlayer);
                         if(activePlayer.getNumCards() >= 5){
                             action = activePlayer.getLogic().turnInCards(true, troopsToPlace);
-                            if(moveIsValid("turnInCards", action)){
+                            if(actionIsValid("turnInCards", action)){
                                 Set<Card> cardsToTurnIn = new HashSet<Card>(Arrays.asList((Card)action[0], (Card)action[1], (Card)action[2]));
                                 cardBonus = calcCardTurnIn(cardsToTurnIn);
                                 Set<Card> tempCards = activePlayer.getCards();
@@ -99,7 +99,7 @@ public class Game {
                         }
                         else{
                             action = activePlayer.getLogic().turnInCards(false, troopsToPlace);
-                            if(moveIsValid("turnInCards", action)){
+                            if(actionIsValid("turnInCards", action)){
                                 Set<Card> cardsToTurnIn = new HashSet<Card>(Arrays.asList((Card)action[0], (Card)action[1], (Card)action[2]));
                                 cardBonus = calcCardTurnIn(cardsToTurnIn);
                                 Set<Card> tempCards = activePlayer.getCards();
@@ -111,7 +111,7 @@ public class Game {
                         troopsToPlace += cardBonus;
                         while(!phasefinished){
                             action = activePlayer.getLogic().draftPhase(troopsToPlace);
-                            if(moveIsValid("placetroops", action)){
+                            if(actionIsValid("placetroops", action)){
                                 int numTroopsPlaced = (int) action[0];
                                 Province destination = (Province) action[1];
                                 troopsToPlace -= numTroopsPlaced;
@@ -130,7 +130,7 @@ public class Game {
                         boolean gainCard = false;
                         while(!phasefinished){
                             action = activePlayer.getLogic().attackPhase();
-                            if(moveIsValid("attacking", action)){
+                            if(actionIsValid("attacking", action)){
                                 int attackingTroops = (int) action[0];
                                 Province attackingProvince = (Province) action[1];
                                 Province defendingProvince = (Province) action[2];
@@ -141,7 +141,7 @@ public class Game {
                                     gainCard = true;
                                     activePlayer.addTerritory(defendingProvince);
                                     action = new Object[]{activePlayer.getLogic().moveAfterConquer(attackingProvince, defendingProvince)};
-                                    if(moveIsValid("moveAfterConquer", action)){
+                                    if(actionIsValid("moveAfterConquer", action)){
                                         int troopsToMove = (int) action[0];
                                         attackingProvince.addSoldiers(troopsToMove*-1);
                                         defendingProvince.addSoldiers(troopsToMove);
@@ -165,7 +165,7 @@ public class Game {
                         //handle move phase
                         while(!phasefinished){
                             action = activePlayer.getLogic().movePhase();
-                            if(moveIsValid("moving", action)){
+                            if(actionIsValid("moving", action)){
                                 int movingTroops = (int) action[0];
                                 Province sourceProvince = (Province) action[1];
                                 Province destinationProvince = (Province) action[2];
@@ -335,7 +335,7 @@ public class Game {
         return(null);
     }
 
-    public Boolean moveIsValid(String type, Object[] move){
+    public Boolean actionIsValid(String type, Object[] move){
         return true;
     }
 
