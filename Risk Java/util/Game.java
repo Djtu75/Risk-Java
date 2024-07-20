@@ -8,9 +8,9 @@ import java.util.HashSet;
 
 public class Game {
     
-    public boolean started = false;
-    public boolean gameOver = false;
-    public int turnNum = 0;
+    private boolean started = false;
+    private boolean gameOver = false;
+    private int turnNum = 0;
     private Player[] players;
     private World world;
     private Card[] deck;
@@ -24,17 +24,17 @@ public class Game {
     public String startGame(int initialTroops){
         if(!started){
             started = true;
-            if (this.validityCheck()){
-                randomOrder(players);
-                assignLand();
-                deck = generateDeck();
-                cardsLeft = deck.length;
+            if (this.validityCheck()){ //Check that world and players are useable
+                randomOrder(players); //Sort player array in random order
+                assignLand(); //Distribute land to players
+                deck = generateDeck(); //Create deck of cards
+                cardsLeft = deck.length; //array should change size as cards are drawn and turned in, this keeps track
 
                 boolean phasefinished = false;
                 int currentPlayerIndex = 0;
                 boolean oldSchoolSetUp = false;
                 if(oldSchoolSetUp){
-                    //Initial troop placement
+                    //Initial land claiming for original setup |Unimplemented
                     for(int i = 0; i < players.length; i++){
                         Player activePlayer = players[i];
                         int troopsToPlace = initialTroops/players.length;
@@ -55,7 +55,7 @@ public class Game {
                         }
                     }
                 }
-                else{
+                else{ //If using standard quick start, distribute even amounts of land between players and add troops randomly to that land
                     for(int i = 0; i < players.length; i++){
                         Player activePlayer = players[i];
                         int troopsToPlace = initialTroops/players.length;
@@ -72,35 +72,41 @@ public class Game {
                     }
                 }
     
-                while(!gameOver){
+                while(!gameOver){ //Main game loop |Needs mechanism to ignore/eliminate players who have lost all territory
                     gameOver = checkGameOver();
                     //Normal turn
                     for(int i = 0; i < players.length; i++){
                         Player activePlayer = players[i];
-                        activePlayer.getLogic().beginTurn();
+                        activePlayer.getLogic().beginTurn(); //Tell player their turn is starting
                         Object[] action;
                         int cardBonus = 0;
                         //Handle cards
-                        int troopsToPlace = calcTroopAllot(activePlayer);
-                        if(activePlayer.getNumCards() >= 5){
+                        int troopsToPlace = calcTroopAllot(activePlayer); //Calc troops player should get to place
+                        if(activePlayer.getNumCards() >= 5){ //If 5 or more cards in hand, force turn in
                             action = activePlayer.getLogic().turnInCards(true, troopsToPlace);
                             if(actionIsValid("turnInCards", action)){
                                 Set<Card> cardsToTurnIn = new HashSet<Card>(Arrays.asList((Card)action[0], (Card)action[1], (Card)action[2]));
+                                for(Card c: cardsToTurnIn){ //Returns cards to deck
+                                    returnCard(c);
+                                }
                                 cardBonus = calcCardTurnIn(cardsToTurnIn);
                                 Set<Card> tempCards = activePlayer.getCards();
                                 tempCards.removeAll(cardsToTurnIn);
                                 activePlayer.setCards(tempCards);
                             }
-                            else{
+                            else{ //If player attempts to turn in invalid set, clear player's hand
                                 Set<Card> tempCards = activePlayer.getCards();
                                 tempCards.clear();
                                 activePlayer.setCards(tempCards);
                             }
                         }
-                        else{
+                        else{ //If fewer than 5 cards, ask player to turn in cards (if invalid input, do nothing as it is not required)
                             action = activePlayer.getLogic().turnInCards(false, troopsToPlace);
                             if(actionIsValid("turnInCards", action)){
                                 Set<Card> cardsToTurnIn = new HashSet<Card>(Arrays.asList((Card)action[0], (Card)action[1], (Card)action[2]));
+                                for(Card c: cardsToTurnIn){ //Returns cards to deck
+                                    returnCard(c);
+                                }
                                 cardBonus = calcCardTurnIn(cardsToTurnIn);
                                 Set<Card> tempCards = activePlayer.getCards();
                                 tempCards.removeAll(cardsToTurnIn);
@@ -129,15 +135,15 @@ public class Game {
                         //handle attacking phase
                         boolean gainCard = false;
                         while(!phasefinished){
-                            action = activePlayer.getLogic().attackPhase();
+                            action = activePlayer.getLogic().attackPhase(); //Prompt player to choose number of troops to attack with, and the two provinces involved
                             if(actionIsValid("attacking", action)){
                                 int attackingTroops = (int) action[0];
                                 Province attackingProvince = (Province) action[1];
                                 Province defendingProvince = (Province) action[2];
-                                int[] result = doBattle((defendingProvince.getNumSoldiers()), attackingTroops);
-                                attackingProvince.addSoldiers(result[1]*-1);
-                                defendingProvince.addSoldiers(result[0]*-1);
-                                if(defendingProvince.getNumSoldiers() == 0){
+                                int[] result = doBattle((defendingProvince.getNumSoldiers()), attackingTroops); //Do one set of dice rolls
+                                attackingProvince.addSoldiers(result[1]*-1); //remove killed soldiers
+                                defendingProvince.addSoldiers(result[0]*-1); //remove killed soldiers
+                                if(defendingProvince.getNumSoldiers() == 0){ //If no troops left in defending province, that province is conquered
                                     gainCard = true;
                                     activePlayer.addTerritory(defendingProvince);
                                     action = new Object[]{activePlayer.getLogic().moveAfterConquer(attackingProvince, defendingProvince)};
@@ -146,8 +152,8 @@ public class Game {
                                         attackingProvince.addSoldiers(troopsToMove*-1);
                                         defendingProvince.addSoldiers(troopsToMove);
                                     }
-                                    else{
-                                        int troopsToMove = 1;
+                                    else{ //If invalid input, move minimum number of troops
+                                        int troopsToMove = attackingTroops;
                                         attackingProvince.addSoldiers(troopsToMove*-1);
                                         defendingProvince.addSoldiers(troopsToMove);
                                     }
@@ -158,7 +164,7 @@ public class Game {
                             }
                         }
                         if(gainCard){
-                            activePlayer.addCard(new Card());
+                            activePlayer.addCard(drawCard());
                         }
                         phasefinished = false;
     
@@ -177,7 +183,7 @@ public class Game {
                             }
                         }
 
-                        activePlayer.getLogic().endTurn();
+                        activePlayer.getLogic().endTurn(); //Signal to player that their turn is ending
                     }
                     turnNum++;
                     
@@ -195,7 +201,10 @@ public class Game {
         
     }
 
-    public Boolean validityCheck(){
+    /**
+     * @return Checks if game has properties valid for setup
+     */
+    public Boolean validityCheck(){ 
         if(players == null || world == null || players.length > world.getProvinces().size()){
             return false;
         }
@@ -213,6 +222,9 @@ public class Game {
         return true;
     }
 
+    /**
+     * @return Checks if game has ended by evaluating if one player owns all territory
+     */
     public boolean checkGameOver(){
         for(Player p: players){
             if(p != null){
@@ -224,6 +236,9 @@ public class Game {
         return false;
     }
 
+    /**
+     * @return Returns a deck of cards that includes a card for each province, and wild cards proportionate to the size of the deck (1 per 21 cards)
+     */
     private Card[] generateDeck(){
         Set<Province> provinces = world.getProvinces();
         int deckSize = provinces.size() + (int)(provinces.size()/21); //In standard risk, 2 wild cards per deck (which has 42 territory cards)
@@ -243,6 +258,9 @@ public class Game {
         return(returnArray);
     }
 
+    /**
+     * @return Returns a random card from the deck. Decrements size of deck.
+     */
     private Card drawCard(){
         Random rand = new Random();
         int indexToDraw = rand.nextInt(cardsLeft); //Pick index
@@ -252,6 +270,9 @@ public class Game {
         return returnCard;
     }
 
+    /**
+     * @param card Card to return to deck.
+     */
     private void returnCard(Card card){
         if(cardsLeft != deck.length){ //If (for some reason) deck is already full, deny card return
             deck[cardsLeft] = card; //Add card to end of deck
@@ -259,7 +280,10 @@ public class Game {
         }
     }
 
-    private void assignLand(){ //Evenly distributes the land, COMRADE
+    /**
+     * //Evenly distributes the land, COMRADE
+     */
+    private void assignLand(){ 
         Object[] provinces = world.getProvinces().toArray();
         randomOrder(provinces);
         int playerIndex = 0;
@@ -269,6 +293,9 @@ public class Game {
         }
     }
 
+    /**
+     * @param array Array is sorted in random order
+     */
     public static void randomOrder(Object[] array){
         Random rand = new Random();
         for (int i = array.length-1; i > 0; i--) {
@@ -280,16 +307,29 @@ public class Game {
 
     }
 
+    /**
+     * @param player player to calculate for
+     * @return Returns troops for player based on owned territory and continents UNIMPLEMENTED
+     */
     public static int calcTroopAllot(Player player){
 
         return 0;
     }
 
+    /**
+     * @param cards cards being turned in
+     * @return Returns bonus troops for set UNIMPLEMENTED
+     */
     public static int calcCardTurnIn(Set<Card> cards){
 
         return 0;
     }
 
+    /**
+     * @param defendingTroops
+     * @param offendingTroops
+     * @return Returns array of losses from battle. [0] is defender's lost troops, [1] is attacker's lost troops. Does not consider more attacking troops than 3 or defending troops than 2, as this is the maximum battle size in risk.
+     */
     public static int[] doBattle(int defendingTroops, int offendingTroops){ //returns array where [0] is defender's lost troops and [1] is offender's lost troops
         Random rand = new Random();
         int[] result = new int[2];
@@ -301,16 +341,16 @@ public class Game {
         if(offendingTroops > 3){
             offendingTroops = 3;
         }
-        for(int i = 0; i < defendingTroops; i++){
+        for(int i = 0; i < defendingTroops; i++){ //Rolls dice
             defenders[i] = rand.nextInt(6)+1;
         }
         sort(defenders);
-        for(int i = 0; i < offendingTroops; i++){
+        for(int i = 0; i < offendingTroops; i++){ //Rolls dice
             offenders[i] = rand.nextInt(6)+1;
         }
         sort(offenders);
 
-        for(int i = 0; (i < defendingTroops && i < offendingTroops); i++){
+        for(int i = 0; (i < defendingTroops && i < offendingTroops); i++){ //Compares dice rolls
             if(defenders[i] >= offenders[i]){
                 result[1] += 1;
             }
@@ -318,12 +358,16 @@ public class Game {
                 result[0] += 1;
             }
         }
-        System.out.println("(" + defenders[0] +", " + defenders[1] + ")");
-        System.out.println("(" + offenders[0] +", " + offenders[1] + ", " + offenders[2] + ")");
-        System.out.println("(" + result[0] +", " + result[1] + ")");
+        System.out.println("(" + defenders[0] +", " + defenders[1] + ")"); //Prints roll results
+        System.out.println("(" + offenders[0] +", " + offenders[1] + ", " + offenders[2] + ")"); //Prints roll results
+        System.out.println("(" + result[0] +", " + result[1] + ")"); //Prints final losses
         return result;
     }
 
+    /**
+     * @param pl
+     * @return Provides method for players to request their current hand data, as the data is protected
+     */
     public Set<Card> getCardData(PlayerLogic pl){
         if(pl != null){
             for(Player p : players){
@@ -335,6 +379,11 @@ public class Game {
         return(null);
     }
 
+    /**
+     * @param type
+     * @param move
+     * @return Determines if move is valid based on current game state. UNIMPLEMENTED
+     */
     public Boolean actionIsValid(String type, Object[] move){
         return true;
     }

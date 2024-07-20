@@ -17,14 +17,14 @@ public class Player {
         this.logic = logic;
     }
 
-    public void setTerritory(Set<Province> newTerritory){
+    protected void setTerritory(Set<Province> newTerritory){
         for(Province province: newTerritory){
             province.setOwner(this);
         }
         territory = newTerritory;
     }
 
-    public void addTerritory(Province newProvince){
+    protected void addTerritory(Province newProvince){
         if(newProvince.getOwner() != null){
             newProvince.getOwner().removeTerritory(newProvince);
         }
@@ -32,7 +32,7 @@ public class Player {
         territory.add(newProvince);
     }
 
-    public void removeTerritory(Province remProvince){
+    protected void removeTerritory(Province remProvince){
         territory.remove(remProvince);
     }
 
