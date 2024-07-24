@@ -52,27 +52,23 @@ public class Player {
         return territory;
     }
 
-    public int getNumsoldiers() {
-        return numsoldiers;
-    }
-
-    public void setNumsoldiers(int numsoldiers) {
+    protected void setNumsoldiers(int numsoldiers) {
         this.numsoldiers = numsoldiers;
     }
 
-    public void setCards(Set<Card> cards) {
+    protected void setCards(Set<Card> cards) {
         this.cards = cards;
     }
 
-    public void addCard(Card card) {
+    protected void addCard(Card card) {
         this.cards.add(card);
     }
 
-    public PlayerLogic getLogic() {
+    protected PlayerLogic getLogic() {
         return logic;
     }
 
-    public void setLogic(PlayerLogic logic) {
+    protected void setLogic(PlayerLogic logic) {
         this.logic = logic;
     }
 
@@ -80,9 +76,8 @@ public class Player {
         return name;
     }
 
-    public void setName(String name) {
+    protected void setName(String name) {
         this.name = name;
     }
-    
 
 }
