@@ -152,7 +152,7 @@ public class Game {
                                     gainCard = true;
                                     activePlayer.addTerritory(defendingProvince);
                                     action = new Object[]{activePlayer.getLogic().moveAfterConquer(attackingProvince, defendingProvince)};
-                                    Object[] parameters2 = {activePlayer};
+                                    Object[] parameters2 = {attackingTroops, attackingProvince};
                                     if(actionIsValid("moveAfterConquer", action, parameters2)){
                                         int troopsToMove = (int) action[0];
                                         attackingProvince.addSoldiers(troopsToMove*-1);
@@ -391,16 +391,16 @@ public class Game {
      * @param move
      * @return Determines if move is valid based on current game state. UNIMPLEMENTED
      */
-    public Boolean actionIsValid(String type, Object[] move, Object[] params){
+    public Boolean actionIsValid(String type, Object[] action, Object[] params){
 
         if(type.equals("placeTroops")){
             try{
                 Player activePlayer = (Player) params[0];
                 int availableTroops = (int) params[1];
-                int numTroops = (int) move[0];
-                Province destination = (Province) move[1];
+                int numTroops = (int) action[0];
+                Province destination = (Province) action[1];
 
-                if(world.getProvinces().contains(destination) && destination.getOwner() == activePlayer && availableTroops >= numTroops){
+                if(world.getProvinces().contains(destination) && destination.getOwner() == activePlayer && availableTroops >= numTroops && numTroops > 0){
                     return true;
                 }
 
@@ -410,8 +410,78 @@ public class Game {
                 return false;
             }
         }
+        else if(type.equals("attacking")){
+
+        }
+        else if(type.equals("moveAfterConquer")){
+            try{
+                int troopsToMove = (int) action[0];
+                int minimumTroops = (int) params[0];
+                Province source = (Province) params[1];
+
+                if(troopsToMove >= minimumTroops && source.getNumSoldiers() > troopsToMove && troopsToMove > 0){
+                    return true;
+                }
+
+            }
+            catch(Exception e){
+                System.out.println("Got error: " + e);
+                return false;
+            }
+        }
+        else if(type.equals("moving")){
+            try{
+                Player activePlayer = (Player) params[0];
+                int movingTroops = (int) action[0];
+                Province source = (Province) action[1];
+                Province destination = (Province) action[2];
+
+                if(world.getProvinces().contains(destination) && world.getProvinces().contains(source) && source.getOwner() == activePlayer &&
+                possibleDestinations(source).contains(destination) && source.getNumSoldiers() > movingTroops && movingTroops > 0){
+                    return true;
+                }
+
+            }
+            catch(Exception e){
+                System.out.println("Got error: " + e);
+                return false;
+            }
+            
+            
+        }
 
         return false;
+    }
+
+    /**
+     * @param source
+     * @return Returns an array of all possible places troops could be moved to from the source province.
+     * Because troops can only be sent through a chain of continuous land owned by the same player, method assumes that target player is the owner of source.
+     */
+    public static Set<Province> possibleDestinations(Province source){
+        Player sourceOwner = source.getOwner();
+        Set<Province> unExplored = new HashSet<Province>();
+        unExplored.add(source);
+        Set<Province> explored = new HashSet<Province>();
+        Set<Province> temp = new HashSet<Province>();
+        Set<Province> valid = new HashSet<Province>();
+        while(unExplored.size() > 0){
+            for(Province p: unExplored){
+                if(p.getOwner() == sourceOwner){
+                    valid.add(p);
+                    for(Province adj: p.getAdjacent()){
+                        if(!explored.contains(adj)){
+                            temp.add(adj);
+                        }
+                    }
+                }
+                explored.add(p);
+            }
+            unExplored.clear();
+            unExplored.addAll(temp);
+            temp.clear();
+        }
+        return valid;
     }
 
     public static void sort(int arr[]) 

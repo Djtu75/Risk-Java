@@ -57,14 +57,17 @@ public class World {
     }
 
     public static void main(String[] args) {
-        Province upperright = new Province("upperright", null, 0);
-        Province upperleft = new Province("upperleft",null, 1);
-        Province lowermiddle = new Province("lowermiddle",null, 2);
-        Province middle = new Province("middle",null, 3);
-        Province outsideright = new Province("outsideright",null, 4);
-        Province outsideleft = new Province("outsideleft",null, 5);
-        Province outsidedown = new Province("outsidedown",null, 6);
-        Province outsidetop = new Province("outsidetop",null, 7);
+        Player player1 = new Player("uno", null);
+        Player player2 = new Player("dos", null);
+        Player player3 = new Player("tres", null);
+        Province upperright = new Province("upperright", player2, 0);
+        Province upperleft = new Province("upperleft", player1, 1);
+        Province lowermiddle = new Province("lowermiddle", player3, 2);
+        Province middle = new Province("middle", player1, 3);
+        Province outsideright = new Province("outsideright", player1, 4);
+        Province outsideleft = new Province("outsideleft", player3, 5);
+        Province outsidedown = new Province("outsidedown", player3, 6);
+        Province outsidetop = new Province("outsidetop", player1, 7);
 
         upperright.setAdjacent(new HashSet<Province>(Arrays.asList(outsideright, middle)));
         upperleft.setAdjacent(new HashSet<Province>(Arrays.asList(outsideleft, middle)));
@@ -83,6 +86,12 @@ public class World {
         System.out.println(test.getProvinces());
         System.out.println(test.calculateAdjacent());
         System.out.println(world);
+
+        System.out.println("Possible Destinations: ");
+        for(Province p: world.getProvinces()){
+            System.out.println(p.getName());
+            System.out.println(Game.possibleDestinations(p));
+        }
 
     }
 

@@ -39,7 +39,7 @@ public class Province{
 
     @Override
     public String toString() {
-        String returnStr = name + "[owner=" + owner + ", numsoldiers=" + numsoldiers + ", adjacent=(";
+        String returnStr = name + "[owner=" + owner.getName() + "(" + owner + ")" + ", numsoldiers=" + numsoldiers + ", adjacent=(";
         for(Province province: adjacent){
             returnStr += province.getName() + ", ";
         }
