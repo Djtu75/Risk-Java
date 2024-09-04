@@ -1,9 +1,15 @@
 package participant;
-import util.*;
-import java.util.Set;
-import java.util.Iterator;
 
-public class PlayerLogic implements Logic {
+import java.util.Iterator;
+import java.util.Set;
+
+import util.*;
+
+public class StupidLogic extends PlayerLogic {
+
+    public StupidLogic(){
+        super();
+    }
 
     Game mygame = null;
     Player myplayer = null;
@@ -31,9 +37,11 @@ public class PlayerLogic implements Logic {
      * @return //Asks player to place troops. Should return [int numTroopstoPlace, Province destination]
      */
     public Object[] draftPhase(int numTroopstoPlace){
-        Province destination = new Province(null, null, 0);
-        int placeXTroops = 1;
+        Province destination = myplayer.getTerritory().iterator().next();
+        int placeXTroops = numTroopstoPlace;
         Object[] returnArray = {placeXTroops, destination};
+        System.out.println("Placing " + destination);
+        System.out.println("# " + placeXTroops);
         return(returnArray);
     }
 
@@ -41,9 +49,21 @@ public class PlayerLogic implements Logic {
      * @return //Asks player to perform attack. Should return [int numTroopstoUse, Province attackingProvince, Province defendingProvince]
      */
     public Object[] attackPhase(){
+        Province attackingProvince = null;
+        Province defendingProvince = null;
+        for(Province p: myplayer.getTerritory()){
+            if(p.getNumSoldiers() > 3){
+                for(Province adj: p.getAdjacent()){
+                    if(adj.getOwner() != p.getOwner()){
+                        attackingProvince = p;
+                        defendingProvince = adj;
+                    }
+                }
+            }
+        }
         int useXtroops = 3;
-        Province attackingProvince = new Province(null, null, 0);
-        Province defendingProvince = new Province(null, null, 0);
+        System.out.println("Attacking " + attackingProvince);
+        System.out.println("Defending " + defendingProvince);
         Object[] returnArray = {useXtroops, attackingProvince, defendingProvince};
         return (returnArray);
 
@@ -94,5 +114,5 @@ public class PlayerLogic implements Logic {
         }
 
     }
-
+    
 }

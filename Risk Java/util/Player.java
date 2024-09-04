@@ -1,5 +1,6 @@
 package util;
 
+import java.awt.Color;
 import java.util.HashSet;
 import java.util.Set;
 import participant.PlayerLogic;
@@ -11,6 +12,8 @@ public class Player {
     private Set<Card> cards = new HashSet<Card>();
     private PlayerLogic logic;
     private String name;
+    private Color color1 = null;
+    private Color color2 = null;
 
     public Player(String name, PlayerLogic logic){
         this.name = name;
@@ -78,6 +81,16 @@ public class Player {
 
     protected void setName(String name) {
         this.name = name;
+    }
+
+    public Color[] getColors(){
+        Color[] c = {color1, color2};
+        return c;
+    }
+
+    protected void setColors(Color c1, Color c2){
+        this.color1 = c1;
+        this.color2 = c2;
     }
 
 }
