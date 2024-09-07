@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import participant.AsherLogic;
 import participant.StupidLogic;
 
 public class Main {
@@ -10,19 +11,22 @@ public class Main {
     public static void main(String[] args){
         System.out.println("test");
 
-        StupidLogic sl1 = new StupidLogic();
-        StupidLogic sl2 = new StupidLogic();
-        StupidLogic sl3 = new StupidLogic();
-        StupidLogic sl4 = new StupidLogic();
+        // StupidLogic sl1 = new StupidLogic();
+        // StupidLogic sl2 = new StupidLogic();
+        // StupidLogic sl3 = new StupidLogic();
+        AsherLogic sl1 = new AsherLogic();
+        AsherLogic sl2 = new AsherLogic();
+        AsherLogic sl3 = new AsherLogic();
+        AsherLogic sl4 = new AsherLogic();
 
-        Player one = new Player("one", sl1);
+        Player one = new Player("playerOne", sl1);
         one.setColors(new Color(252, 186, 3), new Color(128, 252, 3));
-        Player two = new Player("two", sl2);
+        Player two = new Player("playerTwo", sl2);
         two.setColors(new Color(15, 252, 56), new Color(100, 160, 30));
-        Player three = new Player("three", sl3);
+        Player three = new Player("playerThree", sl3);
         three.setColors(new Color(0, 40, 160), new Color(25, 65, 200));
-        Player four = new Player("four", sl4);
-        four.setColors(new Color(38, 186, 252), new Color(252, 100, 48));
+        Player four = new Player("ASHER", sl4);
+        four.setColors(new Color(0, 0, 0), new Color(255, 255, 255));
         Player[] players = {one, two, three, four};
         Province Alaska = new Province("Alaska", one, 0);
         Province Northwest_Territory = new Province("Northwest_Territory", one, 0);

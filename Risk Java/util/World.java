@@ -23,7 +23,6 @@ public class World {
         this.name = name;
     }
 
-
     public Set<Continent> getContinents() {
         return continents;
     }

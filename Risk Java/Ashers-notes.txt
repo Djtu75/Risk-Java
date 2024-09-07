@@ -1,0 +1,26 @@
+Why not use classes instead of arrays of objects for players during the draft, attack, and move phase. 
+maybe have the classes
+draft {
+    int troops;
+    Province target;
+
+    bool is Valid(){};
+}
+
+attack {
+    int troops;
+    Province attacker;
+    Province defender;
+
+    bool isValid(){};
+
+
+}
+
+move {
+    int troops;
+    Province target;
+    Province source;
+
+    bool isValid(){};
+}

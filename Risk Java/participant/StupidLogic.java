@@ -62,10 +62,15 @@ public class StupidLogic extends PlayerLogic {
             }
         }
         int useXtroops = 3;
-        System.out.println("Attacking " + attackingProvince);
-        System.out.println("Defending " + defendingProvince);
-        Object[] returnArray = {useXtroops, attackingProvince, defendingProvince};
-        return (returnArray);
+        if((attackingProvince != null) && (defendingProvince != null)){
+            System.out.println("Attacking " + attackingProvince);
+            System.out.println("Defending " + defendingProvince);
+            Object[] returnArray = {useXtroops, attackingProvince, defendingProvince};
+            return (returnArray);
+        }else {
+            System.out.println("Not Attacking");
+            return null;
+        }
 
     }
 

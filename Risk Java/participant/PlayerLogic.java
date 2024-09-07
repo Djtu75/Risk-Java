@@ -1,7 +1,10 @@
 package participant;
 import util.*;
+
+import java.util.ArrayList;
+
 import java.util.Set;
-import java.util.Iterator;
+
 
 public class PlayerLogic implements Logic {
 
@@ -30,34 +33,37 @@ public class PlayerLogic implements Logic {
     /**
      * @return //Asks player to place troops. Should return [int numTroopstoPlace, Province destination]
      */
-    public Object[] draftPhase(int numTroopstoPlace){
-        Province destination = new Province(null, null, 0);
-        int placeXTroops = 1;
-        Object[] returnArray = {placeXTroops, destination};
-        return(returnArray);
+    public ArrayList<placeTroop> draftPhase(int numTroopstoPlace){
+        ArrayList<placeTroop> ret = new ArrayList<placeTroop>();
+        Set<Province> myterritory = myplayer.getTerritory();
+        for(Province p : myterritory){
+            ret.add(new placeTroop( 1, p));
+        }
+        return ret;
     }
 
     /**
      * @return //Asks player to perform attack. Should return [int numTroopstoUse, Province attackingProvince, Province defendingProvince]
      */
-    public Object[] attackPhase(){
+    public attack attackPhase(){
         int useXtroops = 3;
         Province attackingProvince = new Province(null, null, 0);
         Province defendingProvince = new Province(null, null, 0);
-        Object[] returnArray = {useXtroops, attackingProvince, defendingProvince};
-        return (returnArray);
+        attack p = new attack(useXtroops, attackingProvince, defendingProvince);
+        return p;
 
     }
 
     /**
      * @return //Asks player to move troops. Should return [int numTroopstoMove, Province source, Province destination]
      */
-    public Object[] movePhase(){
+    public moveTroop movePhase(){
         int moveXTroops = 1;
         Province source = new Province(null, null, 0);
         Province destination = new Province(null, null, 0);
-        Object[] returnArray = {moveXTroops, source, destination};
-        return (returnArray);
+        moveTroop ret = new moveTroop(moveXTroops, destination, source);
+        //Object[] returnArray = {moveXTroops, source, destination};
+        return ret;
     }
 
     public void attackPhaseResults(int[] battleResults){
@@ -73,26 +79,23 @@ public class PlayerLogic implements Logic {
     public int moveAfterConquer(Province attackingProvince, Province defendingProvince){
         int transferXTroops = 1;
         return(transferXTroops);
-
     }
 
     /**
      * @return //Asks player to turn in set of cards. If required, must be [Card X, Card Y, Card Z]. If not required, any invalid input will count as passing on your turn.
      */
-    public Object[] turnInCards(boolean required, int currentTroops){
-        if(required){
-            Set<Card> mycards = mygame.getCardData(this);
+    public Set<Card> turnInCards(int currentTroops){
+        Set<Card> mycards = mygame.getCardData(this);
+        Set<Card> set = mygame.makeSet(mycards);
             //Some Logic to pick which 3 to turn in
-            Iterator<Card> iter = mycards.iterator();
-            Card card1 = iter.next();
-            Card card2 = iter.next();
-            Card card3 = iter.next();
-            return(new Object[]{card1, card2, card3});
-        }
-        else{
-            return (new Object[]{"optional"});
-        }
-
+            // Iterator<Card> iter = mycards.iterator();
+            // Card card1 = iter.next();
+            // Card card2 = iter.next();
+            // Card card3 = iter.next();
+            // set.add(card1);
+            // set.add(card2);
+            // set.add(card3);
+            // return set;
+                return set;
     }
-
 }
