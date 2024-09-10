@@ -26,7 +26,7 @@ public class Main {
         Player three = new Player("playerThree", sl3);
         three.setColors(new Color(0, 40, 160), new Color(25, 65, 200));
         Player four = new Player("ASHER", sl4);
-        four.setColors(new Color(0, 0, 0), new Color(255, 255, 255));
+        four.setColors(new Color(179, 137, 179), new Color(179, 137, 179));
         Player[] players = {one, two, three, four};
         Province Alaska = new Province("Alaska", one, 0);
         Province Northwest_Territory = new Province("Northwest_Territory", one, 0);
@@ -125,8 +125,8 @@ public class Main {
         Venezuela.setAdjacent(new HashSet<Province>(Arrays.asList(Brazil, Peru, Central_America)));
         Peru.setAdjacent(new HashSet<Province>(Arrays.asList(Brazil, Venezuela, Argentina)));
         Argentina.setAdjacent(new HashSet<Province>(Arrays.asList(Brazil, Peru)));
-        Brazil.setAdjacent(new HashSet<Province>(Arrays.asList(Peru, Venezuela, Argentina, East_Africa)));
-        West_Africa.setAdjacent(new HashSet<Province>(Arrays.asList(Western_Europe, Central_Africa, East_Africa, Egypt, Southern_Europe)));
+        Brazil.setAdjacent(new HashSet<Province>(Arrays.asList(Peru, Venezuela, Argentina, West_Africa)));
+        West_Africa.setAdjacent(new HashSet<Province>(Arrays.asList(Western_Europe, Central_Africa, East_Africa, Egypt, Southern_Europe, Brazil)));
         Central_Africa.setAdjacent(new HashSet<Province>(Arrays.asList(West_Africa, East_Africa, South_Africa)));
         South_Africa.setAdjacent(new HashSet<Province>(Arrays.asList(Central_Africa, East_Africa, Madagascar)));
         Madagascar.setAdjacent(new HashSet<Province>(Arrays.asList(South_Africa, East_Africa)));

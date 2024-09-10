@@ -41,6 +41,9 @@ public class AsherLogic extends PlayerLogic {
     public ArrayList<placeTroop> draftPhase(int numTroopstoPlace){
         ArrayList<placeTroop> returnArray = new ArrayList<placeTroop>();
         Set<Province> myterritory = myplayer.getTerritory();
+        if(myterritory.size() <= 0){
+            return returnArray;
+        }
         Set<Province> neighbors = new HashSet<Province>();
         Set<Province> borders = new HashSet<Province>();
         int placeXTroops = numTroopstoPlace;
@@ -56,14 +59,16 @@ public class AsherLogic extends PlayerLogic {
                 }
             }
         }
-    
-        for(Province  border : borders){
-            if(placeXTroops > 0){
-                returnArray.add(new placeTroop(1,border));
-                placeXTroops--;
-                System.out.println(myplayer.getName() + " placed 1 troop in "+ border.getName());
-            }else{
-                break;
+        System.out.println("Has "+ borders.size()+" border territories and "+neighbors.size()+" neighboring territories");
+        while(placeXTroops > 0){
+            for(Province  border : borders){
+                if(placeXTroops > 0){
+                    returnArray.add(new placeTroop(1,border));
+                    placeXTroops--;
+                    System.out.println(myplayer.getName() + " placed 1 troop in "+ border.getName());
+                }else{
+                    break;
+                }
             }
         }
         return(returnArray);
@@ -73,6 +78,9 @@ public class AsherLogic extends PlayerLogic {
      * @return //Asks player to perform attack. Should return [int numTroopstoUse, Province attackingProvince, Province defendingProvince]
      */
     public attack attackPhase(){
+        if(myplayer.getTerritory().size() <= 0){
+            return new attack(0, null,null);
+        }
         attack ret;
         Province attackingProvince = null;
         Province defendingProvince = null;
@@ -84,6 +92,15 @@ public class AsherLogic extends PlayerLogic {
                     if(adj.getOwner() != p.getOwner()){
                         pct = mygame.winPctOfPartialAttack(useXtroops , adj.getNumSoldiers());
                         if(pct == -1.0){
+                            if((p.getNumSoldiers() - 1) >= (3*adj.getNumSoldiers())){
+                                useXtroops = 3*adj.getNumSoldiers();
+                                attackingProvince = p;
+                                defendingProvince = adj;
+                            }else if(p.getNumSoldiers() >= 2000){
+                                useXtroops = p.getNumSoldiers() -1;
+                                attackingProvince = p;
+                                defendingProvince = adj;
+                            }
                             //win percentage is not exact, just go with who has more at this point
                         }else{
                             while(pct < 70.0){
@@ -103,8 +120,8 @@ public class AsherLogic extends PlayerLogic {
             }
         }
         if((attackingProvince != null) && (defendingProvince != null)){
-            System.out.println(myplayer.getName()+" is attacking from" + attackingProvince.getName() +" Soliders: "+ attackingProvince.getNumSoldiers() +" WinPercentage: " + mygame.winPctOfPartialAttack(useXtroops, defendingProvince.getNumSoldiers()));
-            System.out.println("Defending " + defendingProvince);
+            System.out.println(myplayer.getName()+" is attacking from " + attackingProvince.getName() +" Soliders: "+ attackingProvince.getNumSoldiers() +" WinPercentage: " + mygame.winPctOfPartialAttack(useXtroops, defendingProvince.getNumSoldiers()));
+            System.out.println("Defending " + defendingProvince.getName() + " with "+ defendingProvince.getNumSoldiers()+ " Soldiers");
             //Object[] returnArray = {useXtroops, attackingProvince, defendingProvince};
             ret = new attack(useXtroops, attackingProvince, defendingProvince);
             //return (returnArray);
@@ -119,18 +136,45 @@ public class AsherLogic extends PlayerLogic {
      * @return //Asks player to move troops. Should return [int numTroopstoMove, Province source, Province destination]
      */
     public moveTroop movePhase(){
-        int moveXTroops = 1;
-        Province source = new Province(null, null, 0);
-        Province destination = new Province(null, null, 0);
-        //Object[] returnArray = {moveXTroops, source, destination};
-        moveTroop ret = new moveTroop(moveXTroops, destination, source);
-        return ret;
+        if(myplayer.getTerritory().size() <= 0){
+            return new moveTroop(0, null,null);
+        }
+        Set<Province> owned = this.myplayer.getTerritory();
+        int maxLazyTroops = 0;
+        int maxEnemies = 0;
+        Province underSuppliedProvince = null;
+        Province lazyProvince = null;
+        for(Province mine: owned){
+            Set<Province> adjacent =  mine.getAdjacent();
+            int lazyTroops = 0;
+            int enemies = 0;
+            for(Province target : adjacent){
+                if(target.getOwner() != this.myplayer){
+                    lazyTroops = -1;
+                    enemies += target.getNumSoldiers();
+                }else{
+                    if(lazyTroops == -1){
+                    lazyTroops = mine.getNumSoldiers() - 1;
+                    }
+                }
+            }
+            if(enemies > maxEnemies && enemies > 0){
+                maxEnemies = enemies;
+                underSuppliedProvince = mine;
+            }
+            if(lazyTroops > maxLazyTroops && lazyTroops > 0){
+                maxLazyTroops = lazyTroops;
+                lazyProvince = mine;
+            }
+        }
+        return new moveTroop(maxLazyTroops , underSuppliedProvince, lazyProvince);
         //return (returnArray);
     }
 
     public void attackPhaseResults(int[] battleResults){
         //Check if attack went well
         //Change logic before attackPhase gets called again
+
         return;
     }
 
@@ -139,8 +183,22 @@ public class AsherLogic extends PlayerLogic {
      * @return //Asks player how many troops to move into conquered territory. Should return [int numTroops]
      */
     public int moveAfterConquer(Province attackingProvince, Province defendingProvince){
-        int transferXTroops = 1;
-        return(transferXTroops);
+    //find all neighbors
+    if(myplayer.getTerritory().size() <= 0){
+        return 0;
+    }
+        int TransferXTroops = 0;
+        Set<Province> adjacent =  attackingProvince.getAdjacent();
+            for(Province target : adjacent){
+                if(target.getOwner() != this.myplayer){
+                    TransferXTroops = (attackingProvince.getNumSoldiers()-1) / 2;
+                    break;
+                }else{
+                    TransferXTroops = (attackingProvince.getNumSoldiers()-1);
+                }
+            }
+
+        return TransferXTroops;
 
     }
 
@@ -150,11 +208,6 @@ public class AsherLogic extends PlayerLogic {
     public Set<Card> turnInCards(int currentTroops){
         
             Set<Card> mycards = mygame.getCardData(this);
-            //Some Logic to pick which 3 to turn in
-            // Iterator<Card> iter = mycards.iterator();
-            // Card card1 = iter.next();
-            // Card card2 = iter.next();
-            // Card card3 = iter.next();
             Set<Card> set = mygame.makeSet(mycards);
             return(set);
     }
