@@ -91,7 +91,7 @@ public class AsherLogic extends PlayerLogic {
                 for(Province adj: p.getAdjacent()){
                     if(adj.getOwner() != p.getOwner()){
                         pct = mygame.winPctOfPartialAttack(useXtroops , adj.getNumSoldiers());
-                        if(pct == -1.0){
+                        if(pct == -1.0 || p.getNumSoldiers() >= 100){
                             if((p.getNumSoldiers() - 1) >= (3*adj.getNumSoldiers())){
                                 useXtroops = 3*adj.getNumSoldiers();
                                 attackingProvince = p;
@@ -122,7 +122,6 @@ public class AsherLogic extends PlayerLogic {
         if((attackingProvince != null) && (defendingProvince != null)){
             System.out.println(myplayer.getName()+" is attacking from " + attackingProvince.getName() +" Soliders: "+ attackingProvince.getNumSoldiers() +" WinPercentage: " + mygame.winPctOfPartialAttack(useXtroops, defendingProvince.getNumSoldiers()));
             System.out.println("Defending " + defendingProvince.getName() + " with "+ defendingProvince.getNumSoldiers()+ " Soldiers");
-            //Object[] returnArray = {useXtroops, attackingProvince, defendingProvince};
             ret = new attack(useXtroops, attackingProvince, defendingProvince);
             //return (returnArray);
             return ret;

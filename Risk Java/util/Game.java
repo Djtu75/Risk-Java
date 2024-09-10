@@ -580,6 +580,15 @@ public class Game {
             ret =  5;
         }
         Set<Province> ownedProvinces = player.getTerritory();
+        Set<Card> myCards = player.getCards();
+        for(Card card : myCards){
+            if(card.getTroop() < 3){
+                if(card.getProvince().getOwner().getName().equals(player.getName())){
+                    System.out.println(player.getName()+ " owns the card a territory: "+ card.getProvince().getName()+" +2");
+                    ret += 2;
+                }
+            }
+        }
         Set<Continent> conts = world.getContinents();
         for(Continent cont : conts){
             Set<Province> provinces = cont.getProvinces();
