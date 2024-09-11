@@ -205,10 +205,59 @@ public class RenderEarth extends Frame {
     }
 
     public void renderPlayerList(Player[] players, int startx, int starty, int transformx, int transformy, Graphics2D graphObj){
+        int rectnum = 4;
+        int rectoffset = 10;
+        Color[] rectColors = {Color.BLACK, Color.GRAY, Color.BLACK, Color.WHITE};
+        for(int i = 0; i < rectnum; i++){
+            GeneralPath path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
+            int beginx = startx - (rectoffset - i*2);
+            int beginy = starty - (rectoffset - i*2);
+            path.moveTo((float) beginx, (float) beginy);
+            path.lineTo((float) beginx, (float) beginy + (70*players.length - (i*2 - rectoffset)*2));
+            path.lineTo((float) beginx + (120 - (i*2 - rectoffset)*2), (float) beginy + (70*players.length - (i*2 - rectoffset)*2));
+            path.lineTo((float) beginx + (120 - (i*2 - rectoffset)*2), (float) beginy);
+            path.lineTo((float) beginx, (float) beginy);
+            path.closePath();
+            setPaintColor("lighten", rectColors[i], null, beginx, beginy, beginx + 50*players.length, beginy + 100*players.length, graphObj);
+            graphObj.fill(path);
+            System.out.println("RUNNING");
+        }
+        
+        starty = starty + 6;
+        graphObj.setColor(Color.BLACK);
         for(Player p : players){
             graphObj.drawString(p.getName(), startx, starty);
             startx += transformx;
             starty += transformy;
+        }
+        
+    }
+
+    public void renderPlayerListProfile(Player[] players, int startx, int starty, Graphics2D graphObj){
+        int rectnum = 4;
+        int rectoffset = 10;
+        Color[] rectColors = {Color.BLACK, Color.GRAY, Color.BLACK, Color.WHITE};
+        for(int i = 0; i < rectnum; i++){
+            GeneralPath path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
+            int beginx = startx - (rectoffset - i*2);
+            int beginy = starty - (rectoffset - i*2);
+            path.moveTo((float) beginx, (float) beginy);
+            path.lineTo((float) beginx, (float) beginy + (70*players.length - (i*2 - rectoffset)*2));
+            path.lineTo((float) beginx + (120 - (i*2 - rectoffset)*2), (float) beginy + (70*players.length - (i*2 - rectoffset)*2));
+            path.lineTo((float) beginx + (120 - (i*2 - rectoffset)*2), (float) beginy);
+            path.lineTo((float) beginx, (float) beginy);
+            path.closePath();
+            setPaintColor("lighten", rectColors[i], null, beginx, beginy, beginx + 50*players.length, beginy + 100*players.length, graphObj);
+            graphObj.fill(path);
+        }
+        
+        starty = starty + 6;
+        int profileAllowance = 70;
+        graphObj.setColor(Color.BLACK);
+        for(Player p : players){
+            graphObj.drawString(p.getName(), startx, starty);
+            startx += 0;
+            starty += profileAllowance;
         }
         
     }
@@ -259,12 +308,14 @@ public class RenderEarth extends Frame {
         Color[] colors = {Color.green, Color.blue, Color.red, Color.yellow, Color.orange, Color.magenta, Color.pink, Color.cyan, Color.gray};
         
         renderWorldWithRects(gm.getgps(), g2d);
-        renderPlayerList(players, 20, 260, 0, 15, g2d);
+        //renderPlayerList(players, 20, 260, 0, 15, g2d);
+        renderPlayerListProfile(players, 20, 340, g2d);
         //g2d.clearRect(0, 0, 1152, 800);
         
         /*
         g.setColor(Color.red);
-        g.drawRect(50, 50, 200, 200);
+        g.drawRect(0, 0, 1000, 1000);
+        
         g2d.setColor(Color.blue);
         g2d.drawRect(75, 75, 300, 300);
 
@@ -293,5 +344,17 @@ public class RenderEarth extends Frame {
         g2d.setColor(Color.yellow);
         g2d.fill(path2);
         */
+    }
+
+    public void refreshPaint(Graphics g) {
+        //g.clearRect(0, 0, windowWidth, windowHeight);
+        //g.drawImage(getImg("Risk Java\\util\\top-view-of-sea-in-the-ocean-background-footage-for-traveling-4k-free-video.jpg"), 0, -15, getParent());
+        //g.drawImage(getImg("Risk Java\\util\\worldimg.png"), 0, -15, getParent());
+        Graphics2D g2d = (Graphics2D)g;
+        Color[] colors = {Color.green, Color.blue, Color.red, Color.yellow, Color.orange, Color.magenta, Color.pink, Color.cyan, Color.gray};
+        
+        renderWorldWithRects(gm.getgps(), g2d);
+        //renderPlayerList(players, 20, 260, 0, 15, g2d);
+        renderPlayerListProfile(players, 20, 340, g2d);
     }
 }
