@@ -292,7 +292,7 @@ public class Game {
                     //wait(1000);
                     //display.repaint();
                     display.refreshPaint(display.getGraphics());
-                }
+                }}
                 
                 return "Winner";
             }
@@ -305,6 +305,8 @@ public class Game {
         }
         
     }
+
+
 
     public static void wait(int ms)
 {
