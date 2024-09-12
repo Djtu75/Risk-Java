@@ -289,10 +289,10 @@ public class Game {
 
                         activePlayer.getLogic().endTurn(); //Signal to player that their turn is ending
                     turnNum++;
-                    //wait(1000);
+                    
                     //display.repaint();
                     display.refreshPaint(display.getGraphics());
-                }
+                }}
                 
                 return "Winner";
             }
@@ -305,6 +305,8 @@ public class Game {
         }
         
     }
+
+
 
     public static void wait(int ms)
 {
