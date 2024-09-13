@@ -1,5 +1,7 @@
 package participant;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -36,19 +38,21 @@ public class StupidLogic extends PlayerLogic {
     /**
      * @return //Asks player to place troops. Should return [int numTroopstoPlace, Province destination]
      */
-    public Object[] draftPhase(int numTroopstoPlace){
-        Province destination = myplayer.getTerritory().iterator().next();
-        int placeXTroops = numTroopstoPlace;
-        Object[] returnArray = {placeXTroops, destination};
-        System.out.println("Placing " + destination);
-        System.out.println("# " + placeXTroops);
-        return(returnArray);
+    public Set<DeployCommand> draftPhase(int numTroopstoPlace){
+        Province destination1 = myplayer.getTerritory().iterator().next();
+        int placeXTroops1 = numTroopstoPlace;
+        Province destination2 = myplayer.getTerritory().iterator().next();
+        int placeXTroops2 = numTroopstoPlace;
+        DeployCommand command1 = new DeployCommand(placeXTroops1, destination1);
+        DeployCommand command2 = new DeployCommand(placeXTroops2, destination2);
+        Set<DeployCommand> returnSet = new HashSet<DeployCommand>(Arrays.asList(command1, command2));
+        return(returnSet);
     }
 
     /**
      * @return //Asks player to perform attack. Should return [int numTroopstoUse, Province attackingProvince, Province defendingProvince]
      */
-    public Object[] attackPhase(){
+    public AttackCommand attackPhase(){
         Province attackingProvince = null;
         Province defendingProvince = null;
         for(Province p: myplayer.getTerritory()){
@@ -62,22 +66,20 @@ public class StupidLogic extends PlayerLogic {
             }
         }
         int useXtroops = 3;
-        System.out.println("Attacking " + attackingProvince);
-        System.out.println("Defending " + defendingProvince);
-        Object[] returnArray = {useXtroops, attackingProvince, defendingProvince};
-        return (returnArray);
+        AttackCommand command = new AttackCommand(useXtroops, attackingProvince, defendingProvince);
+        return (command);
 
     }
 
     /**
      * @return //Asks player to move troops. Should return [int numTroopstoMove, Province source, Province destination]
      */
-    public Object[] movePhase(){
+    public MoveCommand movePhase(){
         int moveXTroops = 1;
-        Province source = new Province(null, null, 0);
-        Province destination = new Province(null, null, 0);
-        Object[] returnArray = {moveXTroops, source, destination};
-        return (returnArray);
+        Province source = null;
+        Province destination = null;
+        MoveCommand command = new MoveCommand(moveXTroops, destination, source);
+        return (command);
     }
 
     public void attackPhaseResults(int[] battleResults){
@@ -99,7 +101,7 @@ public class StupidLogic extends PlayerLogic {
     /**
      * @return //Asks player to turn in set of cards. If required, must be [Card X, Card Y, Card Z]. If not required, any invalid input will count as passing on your turn.
      */
-    public Object[] turnInCards(boolean required, int currentTroops){
+    public Set<Card> turnInCards(boolean required, int currentTroops){
         if(required){
             Set<Card> mycards = mygame.getCardData(this);
             //Some Logic to pick which 3 to turn in
@@ -107,10 +109,11 @@ public class StupidLogic extends PlayerLogic {
             Card card1 = iter.next();
             Card card2 = iter.next();
             Card card3 = iter.next();
-            return(new Object[]{card1, card2, card3});
+            Set<Card> returnSet = new HashSet<Card>(Arrays.asList(card1, card2, card3));
+            return (returnSet);
         }
         else{
-            return (new Object[]{"optional"});
+            return (new HashSet<Card>(Arrays.asList()));
         }
 
     }

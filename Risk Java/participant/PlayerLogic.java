@@ -1,6 +1,8 @@
 package participant;
 import util.*;
 import java.util.Set;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 
 public class PlayerLogic implements Logic {
@@ -30,34 +32,38 @@ public class PlayerLogic implements Logic {
     /**
      * @return //Asks player to place troops. Should return [int numTroopstoPlace, Province destination]
      */
-    public Object[] draftPhase(int numTroopstoPlace){
-        Province destination = new Province(null, null, 0);
-        int placeXTroops = 1;
-        Object[] returnArray = {placeXTroops, destination};
-        return(returnArray);
+    public Set<DeployCommand> draftPhase(int numTroopstoPlace){
+        Province destination1 = null;
+        int placeXTroops1 = 1;
+        Province destination2 = null;
+        int placeXTroops2 = 1;
+        DeployCommand command1 = new DeployCommand(placeXTroops1, destination1);
+        DeployCommand command2 = new DeployCommand(placeXTroops2, destination2);
+        Set<DeployCommand> returnSet = new HashSet<DeployCommand>(Arrays.asList(command1, command2));
+        return(returnSet);
     }
 
     /**
      * @return //Asks player to perform attack. Should return [int numTroopstoUse, Province attackingProvince, Province defendingProvince]
      */
-    public Object[] attackPhase(){
+    public AttackCommand attackPhase(){
         int useXtroops = 3;
-        Province attackingProvince = new Province(null, null, 0);
-        Province defendingProvince = new Province(null, null, 0);
-        Object[] returnArray = {useXtroops, attackingProvince, defendingProvince};
-        return (returnArray);
+        Province attackingProvince = null;
+        Province defendingProvince = null;
+        AttackCommand command = new AttackCommand(useXtroops, attackingProvince, defendingProvince);
+        return (command);
 
     }
 
     /**
      * @return //Asks player to move troops. Should return [int numTroopstoMove, Province source, Province destination]
      */
-    public Object[] movePhase(){
+    public MoveCommand movePhase(){
         int moveXTroops = 1;
-        Province source = new Province(null, null, 0);
-        Province destination = new Province(null, null, 0);
-        Object[] returnArray = {moveXTroops, source, destination};
-        return (returnArray);
+        Province source = null;
+        Province destination = null;
+        MoveCommand command = new MoveCommand(moveXTroops, destination, source);
+        return (command);
     }
 
     public void attackPhaseResults(int[] battleResults){
@@ -79,7 +85,7 @@ public class PlayerLogic implements Logic {
     /**
      * @return //Asks player to turn in set of cards. If required, must be [Card X, Card Y, Card Z]. If not required, any invalid input will count as passing on your turn.
      */
-    public Object[] turnInCards(boolean required, int currentTroops){
+    public Set<Card> turnInCards(boolean required, int currentTroops){
         if(required){
             Set<Card> mycards = mygame.getCardData(this);
             //Some Logic to pick which 3 to turn in
@@ -87,10 +93,11 @@ public class PlayerLogic implements Logic {
             Card card1 = iter.next();
             Card card2 = iter.next();
             Card card3 = iter.next();
-            return(new Object[]{card1, card2, card3});
+            Set<Card> returnSet = new HashSet<Card>(Arrays.asList(card1, card2, card3));
+            return (returnSet);
         }
         else{
-            return (new Object[]{"optional"});
+            return (new HashSet<Card>(Arrays.asList()));
         }
 
     }

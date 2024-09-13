@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import participant.AsherLogic;
 import participant.StupidLogic;
 
 public class Main {
@@ -10,10 +11,15 @@ public class Main {
     public static void main(String[] args){
         System.out.println("test");
 
-        StupidLogic sl1 = new StupidLogic();
+        /*StupidLogic sl1 = new StupidLogic();
         StupidLogic sl2 = new StupidLogic();
         StupidLogic sl3 = new StupidLogic();
-        StupidLogic sl4 = new StupidLogic();
+        StupidLogic sl4 = new StupidLogic();*/
+
+        AsherLogic sl1 = new AsherLogic();
+        AsherLogic sl2 = new AsherLogic();
+        AsherLogic sl3 = new AsherLogic();
+        AsherLogic sl4 = new AsherLogic();
 
         Player one = new Player("one", sl1);
         one.setColors(new Color(252, 186, 3), new Color(128, 252, 3));
@@ -121,8 +127,8 @@ public class Main {
         Venezuela.setAdjacent(new HashSet<Province>(Arrays.asList(Brazil, Peru, Central_America)));
         Peru.setAdjacent(new HashSet<Province>(Arrays.asList(Brazil, Venezuela, Argentina)));
         Argentina.setAdjacent(new HashSet<Province>(Arrays.asList(Brazil, Peru)));
-        Brazil.setAdjacent(new HashSet<Province>(Arrays.asList(Peru, Venezuela, Argentina, East_Africa)));
-        West_Africa.setAdjacent(new HashSet<Province>(Arrays.asList(Western_Europe, Central_Africa, East_Africa, Egypt, Southern_Europe)));
+        Brazil.setAdjacent(new HashSet<Province>(Arrays.asList(Peru, Venezuela, Argentina, West_Africa)));
+        West_Africa.setAdjacent(new HashSet<Province>(Arrays.asList(Western_Europe, Central_Africa, East_Africa, Egypt, Southern_Europe, Brazil)));
         Central_Africa.setAdjacent(new HashSet<Province>(Arrays.asList(West_Africa, East_Africa, South_Africa)));
         South_Africa.setAdjacent(new HashSet<Province>(Arrays.asList(Central_Africa, East_Africa, Madagascar)));
         Madagascar.setAdjacent(new HashSet<Province>(Arrays.asList(South_Africa, East_Africa)));
@@ -172,7 +178,8 @@ public class Main {
 
         RenderEarth test = new RenderEarth(graphprovs, players, game);
 
-        game.startGame(240, test);
+        String result = game.startGame(240, test);
+        System.out.println("Result: " + result);
     }
 
 }

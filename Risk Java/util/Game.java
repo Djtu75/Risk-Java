@@ -20,6 +20,19 @@ public class Game {
     private RenderEarth display = null;
     private GraphicProvince[] gp = null;
 
+    private double[][] winPct = {
+        {0.417 ,0.106 ,0.027 ,0.007 ,0.002 ,0.000 ,0.000 ,0.000 ,0.000 ,0.000},
+        {0.754 ,0.363 ,0.206 ,0.091, 0.049, 0.021, 0.011, 0.005, 0.003, 0.001},
+        {0.916 ,0.656 ,0.470 ,0.315 ,0.206 ,0.134 ,0.084 ,0.054 ,0.033, 0.021},
+        {0.972 ,0.785 ,0.642 ,0.477 ,0.359 ,0.253 ,0.181 ,0.123 ,0.086, 0.057},
+        {0.990 ,0.890 ,0.769 ,0.638 ,0.506 ,0.397 ,0.297 ,0.224 ,0.162 ,0.118},
+        {0.997 ,0.934 ,0.857 ,0.745 ,0.638 ,0.521 ,0.423 ,0.329 ,0.258 ,0.193},
+        {0.999 ,0.967 ,0.910 ,0.834 ,0.736 ,0.640 ,0.536 ,0.446 ,0.357 ,0.287},
+        {1.000 ,0.980 ,0.947 ,0.888 ,0.818 ,0.730 ,0.643 ,0.547 ,0.464 ,0.380},
+        {1.000 ,0.990 ,0.967 ,0.930 ,0.873 ,0.808 ,0.726 ,0.646 ,0.558 ,0.480},
+        {1.000 ,0.994 ,0.981 ,0.954 ,0.916 ,0.861 ,0.800 ,0.724 ,0.650 ,0.568}
+        };
+
     public Game(Player[] players, World world, GraphicProvince[] gps){
         this.players = players;
         this.world = world;
@@ -49,13 +62,16 @@ public class Game {
                         Player activePlayer = players[i];
                         int troopsToPlace = initialTroops/players.length;
                         while(!phasefinished){
-                            Object[] action = activePlayer.getLogic().draftPhase(troopsToPlace);
+                            Set<DeployCommand> action = activePlayer.getLogic().draftPhase(troopsToPlace);
                             Object[] parameters = {activePlayer};
                             if(actionIsValid("placeTroops", action, parameters)){
-                                int numTroopsPlaced = (int) action[0];
-                                Province destination = (Province) action[1];
-                                troopsToPlace -= numTroopsPlaced;
-                                destination.addSoldiers((int) action[0]);
+                                for(DeployCommand dc : action){
+                                    int numTroopsPlaced = dc.getNumTroops();
+                                    Province destination = dc.getProvince();
+                                    troopsToPlace -= numTroopsPlaced;
+                                    destination.addSoldiers(numTroopsPlaced);
+                                }
+                                
                             }
                             else{
                                 phasefinished = true;
@@ -87,8 +103,9 @@ public class Game {
                 //Scanner scnr = new Scanner(System.in);
                 while(!gameOver){ //Main game loop |Needs mechanism to ignore/eliminate players who have lost all territory
                     //String s = scnr.next();
-                      
+                    System.out.println(turnNum); 
                     //wait(3000);
+                    turnNum++;
                     gameOver = checkGameOver();
                     //Normal turn
                     for(int i = 0; i < players.length; i++){
@@ -96,18 +113,13 @@ public class Game {
                         Player activePlayer = players[i];
                         activePlayer.getLogic().beginTurn(); //Tell player their turn is starting
                         System.out.println("Beginning " + activePlayer.getName());
-                        Object[] action;
                         int cardBonus = 0;
                         //Handle cards
                         int troopsToPlace = calcTroopAllot(activePlayer); //Calc troops player should get to place
                         if(activePlayer.getNumCards() >= 5){ //If 5 or more cards in hand, force turn in
-                            Set<Card> cardsToTurnIn = makeSet(activePlayer.getCards());
-                            if(cardsToTurnIn.contains(null)){
-                                System.out.println("ILLEGAL CARD DETECTED");
-                                throw new IllegalArgumentException("ILLEGAL CARD DETECTED");
-                            }
-                            //Object[] parameters = {activePlayer};
-                            if(true){//isValidTurnIn(cardsToTurnIn , activePlayer)/*actionIsValid("turnInCards", action, parameters)*/){
+                            Set<Card> cardsToTurnIn = activePlayer.getLogic().turnInCards(true, troopsToPlace);
+                            Object[] parameters = {activePlayer};
+                            if(actionIsValid("turnInCards", cardsToTurnIn, parameters)){
                                 //Set<Card> cardsToTurnIn = new HashSet<Card>(Arrays.asList((Card)action[0], (Card)action[1], (Card)action[2]));
                                 for(Card c: cardsToTurnIn){ //Returns cards to deck and applies +2 troops if owned by activeplayer
                                     Province cardProv = c.getProvince();
@@ -120,21 +132,26 @@ public class Game {
                                 }
                                 cardBonus = calcCardTurnIn(cardsToTurnIn);
                                 Set<Card> tempCards = activePlayer.getCards();
-                                tempCards.removeAll(cardsToTurnIn);
+                                for(Card c: cardsToTurnIn){
+                                    tempCards.remove(c);
+                                }
+                                //tempCards.removeAll(cardsToTurnIn);
                                 activePlayer.setCards(tempCards);
                             }
                             else{ //If player attempts to turn in invalid set, clear player's hand
                                 Set<Card> tempCards = activePlayer.getCards();
+                                for(Card c: tempCards){
+                                    returnCard(c);
+                                }
                                 tempCards.clear();
                                 activePlayer.setCards(tempCards);
                             }
                         }
                         else{ //If fewer than 5 cards, ask player to turn in cards (if invalid input, do nothing as it is not required)
-                            // action = activePlayer.getLogic().turnInCards(false, troopsToPlace);
-                            // Object[] parameters = {activePlayer};
                             if(activePlayer.getCards().size() >= 3){
-                                Set<Card> cardsToTurnIn = activePlayer.getLogic().turnInCards(troopsToPlace);
-                                if(true){//isValidTurnIn(cardsToTurnIn, activePlayer)/*actionIsValid("turnInCards", action, parameters)*/){
+                                Set<Card> cardsToTurnIn = activePlayer.getLogic().turnInCards(false, troopsToPlace);
+                                Object[] parameters = {activePlayer};
+                                if(actionIsValid("turnInCards", cardsToTurnIn, parameters)){
                                     //Set<Card> cardsToTurnIn = new HashSet<Card>(Arrays.asList((Card)action[0], (Card)action[1], (Card)action[2]));
                                     for(Card c: cardsToTurnIn){ //Returns cards to deck and applies +2 troops if owned by activeplayer
                                         Province cardProv = c.getProvince();
@@ -159,14 +176,16 @@ public class Game {
                         troopsToPlace += cardBonus;
                         phasefinished = false;
                         while(!phasefinished){
-                            action = activePlayer.getLogic().draftPhase(troopsToPlace);
+                            Set<DeployCommand> action = activePlayer.getLogic().draftPhase(troopsToPlace);
                             System.out.println("Placing " + activePlayer.getName());
                             Object[] parameters = {activePlayer, troopsToPlace};
                             if(actionIsValid("placeTroops", action, parameters)){
-                                int numTroopsPlaced = (int) action[0];
-                                Province destination = (Province) action[1];
-                                troopsToPlace -= numTroopsPlaced;
-                                destination.addSoldiers((int) action[0]);
+                                for(DeployCommand dc : action){
+                                    int numTroopsPlaced = dc.getNumTroops();
+                                    Province destination = dc.getProvince();
+                                    troopsToPlace -= numTroopsPlaced;
+                                    destination.addSoldiers(numTroopsPlaced);
+                                }
                             }
                             else{
                                 phasefinished = true;
@@ -180,14 +199,14 @@ public class Game {
                         //handle attacking phase
                         boolean gainCard = false;
                         while(!phasefinished){
-                            action = activePlayer.getLogic().attackPhase(); //Prompt player to choose number of troops to attack with, and the two provinces involved
+                            AttackCommand action = activePlayer.getLogic().attackPhase(); //Prompt player to choose number of troops to attack with, and the two provinces involved
                             Object[] parameters = {activePlayer};
                             System.out.println("Attacking " + activePlayer.getName());
                             System.out.println("Valid? " + actionIsValid("attacking", action, parameters));
                             if(actionIsValid("attacking", action, parameters)){
-                                int attackingTroops = (int) action[0];
-                                Province attackingProvince = (Province) action[1];
-                                Province defendingProvince = (Province) action[2];
+                                int attackingTroops = action.getnumAttackingTroops();
+                                Province attackingProvince = action.getAttackingProvince();
+                                Province defendingProvince = action.getDefendingProvince();
                                 int[] result = doBattle((defendingProvince.getNumSoldiers()), attackingTroops); //Do one set of dice rolls
                                 attackingProvince.addSoldiers(result[1]*-1); //remove killed soldiers
                                 defendingProvince.addSoldiers(result[0]*-1); //remove killed soldiers
@@ -196,10 +215,10 @@ public class Game {
                                 if(defendingProvince.getNumSoldiers() == 0){ //If no troops left in defending province, that province is conquered
                                     gainCard = true;
                                     activePlayer.addTerritory(defendingProvince);
-                                    action = new Object[]{activePlayer.getLogic().moveAfterConquer(attackingProvince, defendingProvince)};
+                                    int followUpAction = activePlayer.getLogic().moveAfterConquer(attackingProvince, defendingProvince);
                                     Object[] parameters2 = {attackingTroops, attackingProvince};
-                                    if(actionIsValid("moveAfterConquer", action, parameters2)){
-                                        int troopsToMove = (int) action[0];
+                                    if(actionIsValid("moveAfterConquer", followUpAction, parameters2)){
+                                        int troopsToMove = followUpAction;
                                         attackingProvince.addSoldiers(troopsToMove*-1);
                                         defendingProvince.addSoldiers(troopsToMove);
                                     }
@@ -221,13 +240,13 @@ public class Game {
     
                         //handle move phase
                         while(!phasefinished){
-                            action = activePlayer.getLogic().movePhase();
+                            MoveCommand action = activePlayer.getLogic().movePhase();
                             Object[] parameters = {activePlayer};
                             System.out.println("Moving " + activePlayer.getName());
                             if(actionIsValid("moving", action, parameters)){
-                                int movingTroops = (int) action[0];
-                                Province sourceProvince = (Province) action[1];
-                                Province destinationProvince = (Province) action[2];
+                                int movingTroops = action.getnumMovingTroops();
+                                Province sourceProvince = action.getSourceProvince();
+                                Province destinationProvince = action.getTargetProvince();
                                 destinationProvince.addSoldiers(movingTroops);
                                 sourceProvince.addSoldiers(movingTroops*-1);
                             }
@@ -238,13 +257,24 @@ public class Game {
 
                         activePlayer.getLogic().endTurn(); //Signal to player that their turn is ending
                     }
-                    turnNum++;
                     //wait(1000);
-                    //display.repaint();
-                    display.refreshPaint(display.getGraphics());
+                    if((turnNum % 200) == 0){
+                        //display.repaint();
+                    }
+                    else{
+                        display.refreshPaint(display.getGraphics());
+                    }
+                    
                 }
-                
-                return "Winner";
+                Player winner = null;
+                for(Player p : players){
+                    if(p.getTerritory().size() > 0){
+                        winner = p;
+                    }
+                }
+                System.out.println("Winner: " + winner + " Turn#: " + turnNum);
+                display.dispose();
+                return "Winner: " + winner + " Turn#: " + turnNum;
             }
             else{
                 return "error";
@@ -296,6 +326,7 @@ public class Game {
         for(Player p: players){
             if(p != null){
                 if(world.getProvinces().size()== p.getTerritory().size()){
+                    System.out.println("gameover = true");
                     return true;
                 }
             }
@@ -463,6 +494,11 @@ public class Game {
         Set<Province> territory = player.getTerritory();
         int owned = player.getTerritory().size();
         int allotedTroops = 3;
+
+        if(owned == 0){
+            return 0;
+        }
+
         if((owned/3) > allotedTroops){
             allotedTroops = owned/3;
         }
@@ -565,29 +601,34 @@ public class Game {
      * @param move
      * @return Determines if move is valid based on current game state. UNIMPLEMENTED
      */
-    public Boolean actionIsValid(String type, Object[] action, Object[] params){
+    public Boolean actionIsValid(String type, Object action, Object[] params){
 
         if(type.equals("placeTroops")){
             try{
                 System.out.println("attempting to place");
                 Player activePlayer = (Player) params[0];
                 int availableTroops = (int) params[1];
-                int numTroops = (int) action[0];
-                Province destination = (Province) action[1];
+                Set<DeployCommand> commandSet = (Set<DeployCommand>) action;
+                int totalPlacement = 0;
+                for(DeployCommand dc : commandSet){
+                    int numTroops = dc.getNumTroops();
+                    Province destination = dc.getProvince();
 
-                Boolean realProvince = false;
-                for(Province p: world.getProvinces()){
-                    if (p == destination){
-                        realProvince = true;
+                    totalPlacement += numTroops;
+
+                    Boolean realProvince = false;
+                    for(Province p: world.getProvinces()){
+                        if (p == destination){
+                            realProvince = true;
+                        }
+                    }
+
+                    if(numTroops < 1 || !(destination.getOwner() == activePlayer) || !realProvince){
+                        return false;
                     }
                 }
 
-                System.out.println(realProvince);
-                System.out.println(destination.getOwner() == activePlayer);
-                System.out.println(availableTroops >= numTroops);
-                System.out.println(numTroops > 0);
-
-                if(realProvince && destination.getOwner() == activePlayer && availableTroops >= numTroops && numTroops > 0){
+                if(availableTroops >= totalPlacement){
                     return true;
                 }
 
@@ -600,9 +641,10 @@ public class Game {
         else if(type.equals("attacking")){
             try{
                 Player activePlayer = (Player) params[0];
-                int attackingTroops = (int) action[0];
-                Province attackingProvince = (Province) action[1];
-                Province defendingProvince = (Province) action[2];
+                AttackCommand command = (AttackCommand) action;
+                int attackingTroops = command.getnumAttackingTroops();
+                Province attackingProvince = command.getAttackingProvince();
+                Province defendingProvince = command.getDefendingProvince();
                 System.out.println(attackingProvince.getOwner() == activePlayer);
                 System.out.println(defendingProvince.getOwner() != activePlayer);
                 System.out.println(attackingTroops < attackingProvince.getNumSoldiers());
@@ -619,7 +661,7 @@ public class Game {
         }
         else if(type.equals("moveAfterConquer")){
             try{
-                int troopsToMove = (int) action[0];
+                int troopsToMove = (int) action;
                 int minimumTroops = (int) params[0];
                 Province source = (Province) params[1];
 
@@ -636,9 +678,10 @@ public class Game {
         else if(type.equals("moving")){
             try{
                 Player activePlayer = (Player) params[0];
-                int movingTroops = (int) action[0];
-                Province source = (Province) action[1];
-                Province destination = (Province) action[2];
+                MoveCommand command = (MoveCommand) action;
+                int movingTroops = command.getnumMovingTroops();
+                Province source = command.getSourceProvince();
+                Province destination = command.getTargetProvince();
 
                 if(world.getProvinces().contains(destination) && world.getProvinces().contains(source) && source.getOwner() == activePlayer &&
                 possibleDestinations(source).contains(destination) && source.getNumSoldiers() > movingTroops && movingTroops > 0){

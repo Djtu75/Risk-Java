@@ -11,14 +11,14 @@ public class Province{
     private Set<Province> adjacent = new HashSet<Province>();
     private Continent continent;
 
-    public Province(String name, Player ownership, int numsoldiers){
+    protected Province(String name, Player ownership, int numsoldiers){
         this.name = name;
         this.owner = ownership;
         this.numsoldiers = numsoldiers;
         adjacent = new HashSet<Province>();
     }
 
-    public Province(String name, Player ownership, int numsoldiers, Set<Province> adjacents){
+    protected Province(String name, Player ownership, int numsoldiers, Set<Province> adjacents){
         this.name = name;
         this.owner = ownership;
         this.numsoldiers = numsoldiers;
@@ -28,7 +28,7 @@ public class Province{
         }
     }
 
-    public Province(String name, Player ownership, int numsoldiers, Set<Province> adjacents, Continent continent){
+    protected Province(String name, Player ownership, int numsoldiers, Set<Province> adjacents, Continent continent){
         this.name = name;
         this.owner = ownership;
         this.numsoldiers = numsoldiers;
