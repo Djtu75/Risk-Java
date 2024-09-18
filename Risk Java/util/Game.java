@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.awt.*;
+import java.awt.font.ShapeGraphicAttribute;
 
 public class Game {
     
@@ -62,7 +63,7 @@ public class Game {
                         Player activePlayer = players[i];
                         int troopsToPlace = initialTroops/players.length;
                         while(!phasefinished){
-                            Set<DeployCommand> action = activePlayer.getLogic().draftPhase(troopsToPlace);
+                            Set<DeployCommand> action = activePlayer.getLogic().draftPhase(new Snapshot(world, players, activePlayer.getCards(), calcCardTurnIn()), troopsToPlace);
                             Object[] parameters = {activePlayer};
                             if(actionIsValid("placeTroops", action, parameters)){
                                 for(DeployCommand dc : action){
@@ -91,11 +92,13 @@ public class Game {
                         for(Province prov: activePlayer.getTerritory()){
                             troopsToPlace--;
                             prov.setNumsoldiers(1);
+                            activePlayer.setNumsoldiers(activePlayer.getNumSoldiers() + 1);
                         }
                         while(troopsToPlace > 0){
                             Random rand = new Random();
                             Object[] temp = activePlayer.getTerritory().toArray();
                             ((Province) temp[rand.nextInt(temp.length)]).addSoldiers(1);
+                            activePlayer.setNumsoldiers(activePlayer.getNumSoldiers() + 1);
                             troopsToPlace--;
                         }
                     }
@@ -111,13 +114,13 @@ public class Game {
                     for(int i = 0; i < players.length; i++){
                         
                         Player activePlayer = players[i];
-                        activePlayer.getLogic().beginTurn(); //Tell player their turn is starting
+                        activePlayer.getLogic().beginTurn(new Snapshot(world, players, activePlayer.getCards(), calcCardTurnIn())); //Tell player their turn is starting
                         System.out.println("Beginning " + activePlayer.getName());
                         int cardBonus = 0;
                         //Handle cards
                         int troopsToPlace = calcTroopAllot(activePlayer); //Calc troops player should get to place
                         if(activePlayer.getNumCards() >= 5){ //If 5 or more cards in hand, force turn in
-                            Set<Card> cardsToTurnIn = activePlayer.getLogic().turnInCards(true, troopsToPlace);
+                            Set<Card> cardsToTurnIn = activePlayer.getLogic().turnInCards(new Snapshot(world, players, activePlayer.getCards(), calcCardTurnIn()), true, troopsToPlace);
                             Object[] parameters = {activePlayer};
                             if(actionIsValid("turnInCards", cardsToTurnIn, parameters)){
                                 //Set<Card> cardsToTurnIn = new HashSet<Card>(Arrays.asList((Card)action[0], (Card)action[1], (Card)action[2]));
@@ -130,7 +133,8 @@ public class Game {
                                     }
                                     returnCard(c);
                                 }
-                                cardBonus = calcCardTurnIn(cardsToTurnIn);
+                                totalTrades++;
+                                cardBonus = calcCardTurnIn();
                                 Set<Card> tempCards = activePlayer.getCards();
                                 for(Card c: cardsToTurnIn){
                                     tempCards.remove(c);
@@ -149,7 +153,7 @@ public class Game {
                         }
                         else{ //If fewer than 5 cards, ask player to turn in cards (if invalid input, do nothing as it is not required)
                             if(activePlayer.getCards().size() >= 3){
-                                Set<Card> cardsToTurnIn = activePlayer.getLogic().turnInCards(false, troopsToPlace);
+                                Set<Card> cardsToTurnIn = activePlayer.getLogic().turnInCards(new Snapshot(world, players, activePlayer.getCards(), calcCardTurnIn()), false, troopsToPlace);
                                 Object[] parameters = {activePlayer};
                                 if(actionIsValid("turnInCards", cardsToTurnIn, parameters)){
                                     //Set<Card> cardsToTurnIn = new HashSet<Card>(Arrays.asList((Card)action[0], (Card)action[1], (Card)action[2]));
@@ -162,7 +166,8 @@ public class Game {
                                         }
                                         returnCard(c);
                                     }
-                                    cardBonus = calcCardTurnIn(cardsToTurnIn);
+                                    totalTrades++;
+                                    cardBonus = calcCardTurnIn();
                                     Set<Card> tempCards = activePlayer.getCards();
                                     for(Card c: cardsToTurnIn){
                                         tempCards.remove(c);
@@ -176,7 +181,7 @@ public class Game {
                         troopsToPlace += cardBonus;
                         phasefinished = false;
                         while(!phasefinished){
-                            Set<DeployCommand> action = activePlayer.getLogic().draftPhase(troopsToPlace);
+                            Set<DeployCommand> action = activePlayer.getLogic().draftPhase(new Snapshot(world, players, activePlayer.getCards(), calcCardTurnIn()), troopsToPlace);
                             System.out.println("Placing " + activePlayer.getName());
                             Object[] parameters = {activePlayer, troopsToPlace};
                             if(actionIsValid("placeTroops", action, parameters)){
@@ -185,6 +190,7 @@ public class Game {
                                     Province destination = dc.getProvince();
                                     troopsToPlace -= numTroopsPlaced;
                                     destination.addSoldiers(numTroopsPlaced);
+                                    activePlayer.setNumsoldiers(activePlayer.getNumSoldiers() + numTroopsPlaced);
                                 }
                             }
                             else{
@@ -199,7 +205,7 @@ public class Game {
                         //handle attacking phase
                         boolean gainCard = false;
                         while(!phasefinished){
-                            AttackCommand action = activePlayer.getLogic().attackPhase(); //Prompt player to choose number of troops to attack with, and the two provinces involved
+                            AttackCommand action = activePlayer.getLogic().attackPhase(new Snapshot(world, players, activePlayer.getCards(), calcCardTurnIn())); //Prompt player to choose number of troops to attack with, and the two provinces involved
                             Object[] parameters = {activePlayer};
                             System.out.println("Attacking " + activePlayer.getName());
                             System.out.println("Valid? " + actionIsValid("attacking", action, parameters));
@@ -209,13 +215,15 @@ public class Game {
                                 Province defendingProvince = action.getDefendingProvince();
                                 int[] result = doBattle((defendingProvince.getNumSoldiers()), attackingTroops); //Do one set of dice rolls
                                 attackingProvince.addSoldiers(result[1]*-1); //remove killed soldiers
+                                attackingProvince.getOwner().setNumsoldiers(attackingProvince.getOwner().getNumSoldiers() + result[1]*-1);
                                 defendingProvince.addSoldiers(result[0]*-1); //remove killed soldiers
+                                defendingProvince.getOwner().setNumsoldiers(defendingProvince.getOwner().getNumSoldiers() + result[0]*-1);
                                 System.out.println("Result " +result[0]);
-                                activePlayer.getLogic().attackPhaseResults(result);
+                                activePlayer.getLogic().attackPhaseResults(new Snapshot(world, players, activePlayer.getCards(), calcCardTurnIn()), result);
                                 if(defendingProvince.getNumSoldiers() == 0){ //If no troops left in defending province, that province is conquered
                                     gainCard = true;
                                     activePlayer.addTerritory(defendingProvince);
-                                    int followUpAction = activePlayer.getLogic().moveAfterConquer(attackingProvince, defendingProvince);
+                                    int followUpAction = activePlayer.getLogic().moveAfterConquer(new Snapshot(world, players, activePlayer.getCards(), calcCardTurnIn()), attackingProvince, defendingProvince);
                                     Object[] parameters2 = {attackingTroops, attackingProvince};
                                     if(actionIsValid("moveAfterConquer", followUpAction, parameters2)){
                                         int troopsToMove = followUpAction;
@@ -240,7 +248,7 @@ public class Game {
     
                         //handle move phase
                         while(!phasefinished){
-                            MoveCommand action = activePlayer.getLogic().movePhase();
+                            MoveCommand action = activePlayer.getLogic().movePhase(new Snapshot(world, players, activePlayer.getCards(), calcCardTurnIn()));
                             Object[] parameters = {activePlayer};
                             System.out.println("Moving " + activePlayer.getName());
                             if(actionIsValid("moving", action, parameters)){
@@ -255,11 +263,11 @@ public class Game {
                             }
                         }
 
-                        activePlayer.getLogic().endTurn(); //Signal to player that their turn is ending
+                        activePlayer.getLogic().endTurn(new Snapshot(world, players, activePlayer.getCards(), calcCardTurnIn())); //Signal to player that their turn is ending
                     }
                     //wait(1000);
                     if((turnNum % 200) == 0){
-                        //display.repaint();
+                        display.repaint();
                     }
                     else{
                         display.refreshPaint(display.getGraphics());
@@ -523,7 +531,7 @@ public class Game {
      * @param cards cards being turned in
      * @return Returns bonus troops for set UNIMPLEMENTED
      */
-    public int calcCardTurnIn(Set<Card> cards){
+    public int calcCardTurnIn(){
         if(totalTrades > 6){
             return(15 + totalTrades*5);
         }

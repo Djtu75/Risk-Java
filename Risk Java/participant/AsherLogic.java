@@ -24,21 +24,21 @@ public class AsherLogic extends PlayerLogic {
     /**
      * @return Method to tell player their turn is about to start. Intended to let player initialize variables and logic.
      */
-    public void beginTurn(){
+    public void beginTurn(Snapshot s){
         //Do setup logic
     }
 
     /**
      * @return //Method to tell player their turn is about to end. Intended to let player clean up variables and logic.
      */
-    public void endTurn(){
+    public void endTurn(Snapshot s){
         //Do ending logic
     }
 
     /**
      * @return //Asks player to place troops. Should return [int numTroopstoPlace, Province destination]
      */
-    public Set<DeployCommand> draftPhase(int numTroopstoPlace){
+    public Set<DeployCommand> draftPhase(Snapshot s, int numTroopstoPlace){
         Set<DeployCommand> returnArray = new HashSet<DeployCommand>();
         Set<Province> myterritory = myplayer.getTerritory();
         if(myterritory.size() <= 0){
@@ -77,7 +77,7 @@ public class AsherLogic extends PlayerLogic {
     /**
      * @return //Asks player to perform attack. Should return [int numTroopstoUse, Province attackingProvince, Province defendingProvince]
      */
-    public AttackCommand attackPhase(){
+    public AttackCommand attackPhase(Snapshot s){
         if(myplayer.getTerritory().size() <= 0){
             return new AttackCommand(0, null,null);
         }
@@ -134,7 +134,7 @@ public class AsherLogic extends PlayerLogic {
     /**
      * @return //Asks player to move troops. Should return [int numTroopstoMove, Province source, Province destination]
      */
-    public MoveCommand movePhase(){
+    public MoveCommand movePhase(Snapshot s){
         if(myplayer.getTerritory().size() <= 0){
             return new MoveCommand(0, null,null);
         }
@@ -181,7 +181,7 @@ public class AsherLogic extends PlayerLogic {
     /**
      * @return //Asks player how many troops to move into conquered territory. Should return [int numTroops]
      */
-    public int moveAfterConquer(Province attackingProvince, Province defendingProvince){
+    public int moveAfterConquer(Snapshot s, Province attackingProvince, Province defendingProvince){
     //find all neighbors
     if(myplayer.getTerritory().size() <= 0){
         return 0;
@@ -204,7 +204,7 @@ public class AsherLogic extends PlayerLogic {
     /**
      * @return //Asks player to turn in set of cards. If required, must be [Card X, Card Y, Card Z]. If not required, any invalid input will count as passing on your turn.
      */
-    public Set<Card> turnInCards(boolean required, int currentTroops){
+    public Set<Card> turnInCards(Snapshot s, boolean required, int currentTroops){
         
             Set<Card> mycards = mygame.getCardData(this);
             Set<Card> set = mygame.makeSet(mycards);
