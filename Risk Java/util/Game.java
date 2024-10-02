@@ -20,6 +20,7 @@ public class Game {
     private int cardsLeft;
     private RenderEarth display = null;
     private GraphicProvince[] gp = null;
+    private static Random rand = new Random();
 
     private double[][] winPct = {
         {0.417 ,0.106 ,0.027 ,0.007 ,0.002 ,0.000 ,0.000 ,0.000 ,0.000 ,0.000},
@@ -95,7 +96,6 @@ public class Game {
                             activePlayer.setNumsoldiers(activePlayer.getNumSoldiers() + 1);
                         }
                         while(troopsToPlace > 0){
-                            Random rand = new Random();
                             Object[] temp = activePlayer.getTerritory().toArray();
                             ((Province) temp[rand.nextInt(temp.length)]).addSoldiers(1);
                             activePlayer.setNumsoldiers(activePlayer.getNumSoldiers() + 1);
@@ -449,7 +449,6 @@ public class Game {
      * @return Returns a random card from the deck. Decrements size of deck.
      */
     private Card drawCard(){
-        Random rand = new Random();
         int indexToDraw = rand.nextInt(cardsLeft); //Pick index
         Card returnCard = deck[indexToDraw]; //Save card
         deck[indexToDraw] = deck[cardsLeft-1]; //Swap drawn card with last elem of list
@@ -484,7 +483,6 @@ public class Game {
      * @param array Array is sorted in random order
      */
     public static void randomOrder(Object[] array){
-        Random rand = new Random();
         for (int i = array.length-1; i > 0; i--) {
 			int randomIndex = rand.nextInt(i+1);
 			Object temp = array[randomIndex];
@@ -562,7 +560,6 @@ public class Game {
      * @return Returns array of losses from battle. [0] is defender's lost troops, [1] is attacker's lost troops. Does not consider more attacking troops than 3 or defending troops than 2, as this is the maximum battle size in risk.
      */
     public static int[] doBattle(int defendingTroops, int offendingTroops){ //returns array where [0] is defender's lost troops and [1] is offender's lost troops
-        Random rand = new Random();
         int[] result = new int[2];
         int[] defenders = new int[2];
         int[] offenders = new int[3];
