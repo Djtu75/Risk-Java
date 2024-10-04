@@ -3,16 +3,24 @@ package util;
 import java.util.Set;
 
 public class Snapshot {
+    private Game game;
     private World world;
     private Player[] players;
+    private Player yourPlayer;
     private Set<Card> userHand;
     private int currentSetBonus;
 
-    public Snapshot(World world, Player[] players, Set<Card> userHand, int currentSetBonus){
+    public Snapshot(Game game, World world, Player[] players, Player yourPlayer, Set<Card> userHand, int currentSetBonus){
+        this.game = game;
         this.world = world;
         this.players = players;
+        this.yourPlayer = yourPlayer;
         this.userHand = userHand;
         this.currentSetBonus = currentSetBonus;
+    }
+
+    public Game getGame() {
+        return game;
     }
 
     public World getWorld() {
@@ -21,6 +29,10 @@ public class Snapshot {
 
     public Player[] getPlayers() {
         return players;
+    }
+
+    public Player getMyPlayer() {
+        return yourPlayer;
     }
 
     public Set<Card> getUserHand() {

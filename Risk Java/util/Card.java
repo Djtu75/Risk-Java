@@ -3,33 +3,29 @@ import java.util.Random;
 
 public class Card {
     
-    private int troop; //0 = Infantry, 1 = Cavalry, 2 = Artillery, 3 = Wild
+    private int type; //0 = Infantry, 1 = Cavalry, 2 = Artillery, 3 = Wild
     private Province province; //The Province the card is attached to
 
     protected Card(){ //Creates wild card
         province = null;
-        troop = 3;
+        type = 3;
     }
 
     protected Card(Province prov){ //Creates standard card
         Random rand = new Random();
-        troop = rand.nextInt(3);
+        type = rand.nextInt(3);
         province = prov;
     }
 
-    protected int getValue(){
-        return troop;
+    public int getType() {
+        return type;
     }
 
-    protected int getTroop() {
-        return troop;
+    protected void setType(int type) {
+        this.type = type;
     }
 
-    protected void setTroop(int troop) {
-        this.troop = troop;
-    }
-
-    protected Province getProvince() {
+    public Province getProvince() {
         return province;
     }
 

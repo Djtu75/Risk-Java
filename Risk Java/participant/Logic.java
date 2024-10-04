@@ -5,7 +5,6 @@ import java.util.Set;
 
 public interface Logic {
 
-    public void initialize(Game mygame, Player myPlayer);
     public void beginTurn(Snapshot s); //Method to tell player their turn is about to start. Intended to let player initialize variables and logic.
     public void endTurn(Snapshot s); //Method to tell player their turn is about to end. Intended to let player clean up variables and logic.
 

@@ -13,13 +13,18 @@ public class AsherLogic extends PlayerLogic {
         super();
     }
 
-    Game mygame = null;
-    Player myplayer = null;
-
-    public void initialize(Game mygame, Player myplayer){
-        this.mygame = mygame;
-        this.myplayer = myplayer;
-    }
+    private double[][] winPct = {
+        {0.417 ,0.106 ,0.027 ,0.007 ,0.002 ,0.000 ,0.000 ,0.000 ,0.000 ,0.000},
+        {0.754 ,0.363 ,0.206 ,0.091, 0.049, 0.021, 0.011, 0.005, 0.003, 0.001},
+        {0.916 ,0.656 ,0.470 ,0.315 ,0.206 ,0.134 ,0.084 ,0.054 ,0.033, 0.021},
+        {0.972 ,0.785 ,0.642 ,0.477 ,0.359 ,0.253 ,0.181 ,0.123 ,0.086, 0.057},
+        {0.990 ,0.890 ,0.769 ,0.638 ,0.506 ,0.397 ,0.297 ,0.224 ,0.162 ,0.118},
+        {0.997 ,0.934 ,0.857 ,0.745 ,0.638 ,0.521 ,0.423 ,0.329 ,0.258 ,0.193},
+        {0.999 ,0.967 ,0.910 ,0.834 ,0.736 ,0.640 ,0.536 ,0.446 ,0.357 ,0.287},
+        {1.000 ,0.980 ,0.947 ,0.888 ,0.818 ,0.730 ,0.643 ,0.547 ,0.464 ,0.380},
+        {1.000 ,0.990 ,0.967 ,0.930 ,0.873 ,0.808 ,0.726 ,0.646 ,0.558 ,0.480},
+        {1.000 ,0.994 ,0.981 ,0.954 ,0.916 ,0.861 ,0.800 ,0.724 ,0.650 ,0.568}
+        };
 
     /**
      * @return Method to tell player their turn is about to start. Intended to let player initialize variables and logic.
@@ -40,7 +45,7 @@ public class AsherLogic extends PlayerLogic {
      */
     public Set<DeployCommand> draftPhase(Snapshot s, int numTroopstoPlace){
         Set<DeployCommand> returnArray = new HashSet<DeployCommand>();
-        Set<Province> myterritory = myplayer.getTerritory();
+        Set<Province> myterritory = s.getMyPlayer().getTerritory();
         if(myterritory.size() <= 0){
             return returnArray;
         }
@@ -52,7 +57,7 @@ public class AsherLogic extends PlayerLogic {
         for(Province owned : myterritory){
             Set<Province> adjacent =  owned.getAdjacent();
             for(Province target : adjacent){
-                if(target.getOwner() != this.myplayer){
+                if(target.getOwner() != s.getMyPlayer()){
                     neighbors.add(target);
                     borders.add(owned);
 
@@ -65,7 +70,7 @@ public class AsherLogic extends PlayerLogic {
                 if(placeXTroops > 0){
                     returnArray.add(new DeployCommand(1,border));
                     placeXTroops--;
-                    System.out.println(myplayer.getName() + " placed 1 troop in "+ border.getName());
+                    System.out.println(s.getMyPlayer().getName() + " placed 1 troop in "+ border.getName());
                 }else{
                     break;
                 }
@@ -78,7 +83,7 @@ public class AsherLogic extends PlayerLogic {
      * @return //Asks player to perform attack. Should return [int numTroopstoUse, Province attackingProvince, Province defendingProvince]
      */
     public AttackCommand attackPhase(Snapshot s){
-        if(myplayer.getTerritory().size() <= 0){
+        if(s.getMyPlayer().getTerritory().size() <= 0){
             return new AttackCommand(0, null,null);
         }
         AttackCommand ret;
@@ -86,11 +91,11 @@ public class AsherLogic extends PlayerLogic {
         Province defendingProvince = null;
         int useXtroops = 1;
         double pct;
-        for(Province p: myplayer.getTerritory()){
+        for(Province p: s.getMyPlayer().getTerritory()){
             if(p.getNumSoldiers() > 3){
                 for(Province adj: p.getAdjacent()){
                     if(adj.getOwner() != p.getOwner()){
-                        pct = mygame.winPctOfPartialAttack(useXtroops , adj.getNumSoldiers());
+                        pct = winPctOfPartialAttack(useXtroops , adj.getNumSoldiers());
                         if(pct == -1.0 || p.getNumSoldiers() >= 100){
                             if((p.getNumSoldiers() - 1) >= (3*adj.getNumSoldiers())){
                                 useXtroops = 3*adj.getNumSoldiers();
@@ -108,7 +113,7 @@ public class AsherLogic extends PlayerLogic {
                                 if(useXtroops >= p.getNumSoldiers()){
                                     break;
                                 }
-                                pct = mygame.winPctOfPartialAttack(useXtroops , adj.getNumSoldiers());
+                                pct = winPctOfPartialAttack(useXtroops , adj.getNumSoldiers());
                             }
                             if(useXtroops <= p.getNumSoldiers() - 1 && pct > 70.0){
                                 attackingProvince = p;
@@ -120,7 +125,7 @@ public class AsherLogic extends PlayerLogic {
             }
         }
         if((attackingProvince != null) && (defendingProvince != null)){
-            System.out.println(myplayer.getName()+" is attacking from " + attackingProvince.getName() +" Soliders: "+ attackingProvince.getNumSoldiers() +" WinPercentage: " + mygame.winPctOfPartialAttack(useXtroops, defendingProvince.getNumSoldiers()));
+            System.out.println(s.getMyPlayer().getName()+" is attacking from " + attackingProvince.getName() +" Soliders: "+ attackingProvince.getNumSoldiers() +" WinPercentage: " + winPctOfPartialAttack(useXtroops, defendingProvince.getNumSoldiers()));
             System.out.println("Defending " + defendingProvince.getName() + " with "+ defendingProvince.getNumSoldiers()+ " Soldiers");
             ret = new AttackCommand(useXtroops, attackingProvince, defendingProvince);
             //return (returnArray);
@@ -135,10 +140,10 @@ public class AsherLogic extends PlayerLogic {
      * @return //Asks player to move troops. Should return [int numTroopstoMove, Province source, Province destination]
      */
     public MoveCommand movePhase(Snapshot s){
-        if(myplayer.getTerritory().size() <= 0){
+        if(s.getMyPlayer().getTerritory().size() <= 0){
             return new MoveCommand(0, null,null);
         }
-        Set<Province> owned = this.myplayer.getTerritory();
+        Set<Province> owned = s.getMyPlayer().getTerritory();
         int maxLazyTroops = 0;
         int maxEnemies = 0;
         Province underSuppliedProvince = null;
@@ -148,7 +153,7 @@ public class AsherLogic extends PlayerLogic {
             int lazyTroops = 0;
             int enemies = 0;
             for(Province target : adjacent){
-                if(target.getOwner() != this.myplayer){
+                if(target.getOwner() != s.getMyPlayer()){
                     lazyTroops = -1;
                     enemies += target.getNumSoldiers();
                 }else{
@@ -183,13 +188,13 @@ public class AsherLogic extends PlayerLogic {
      */
     public int moveAfterConquer(Snapshot s, Province attackingProvince, Province defendingProvince){
     //find all neighbors
-    if(myplayer.getTerritory().size() <= 0){
+    if(s.getMyPlayer().getTerritory().size() <= 0){
         return 0;
     }
         int TransferXTroops = 0;
         Set<Province> adjacent =  attackingProvince.getAdjacent();
             for(Province target : adjacent){
-                if(target.getOwner() != this.myplayer){
+                if(target.getOwner() != s.getMyPlayer()){
                     TransferXTroops = (attackingProvince.getNumSoldiers()-1) / 2;
                     break;
                 }else{
@@ -206,9 +211,91 @@ public class AsherLogic extends PlayerLogic {
      */
     public Set<Card> turnInCards(Snapshot s, boolean required, int currentTroops){
         
-            Set<Card> mycards = mygame.getCardData(this);
-            Set<Card> set = mygame.makeSet(mycards);
+            Set<Card> mycards = s.getUserHand();
+            Set<Card> set = makeSet(mycards);
             return(set);
+    }
+
+    public double winPctOfFullAttack(Province attacker, Province defender){
+        int attackers = attacker.getNumSoldiers();
+        int defenders = defender.getNumSoldiers();
+        if(attackers > 10 || defenders > 10){
+            return -1.0;
+        }
+
+        return (winPct[attackers -1][defenders -1] * 100);
+
+    }
+    public double winPctOfPartialAttack(int attackers, int defenders){
+        if(attackers > 10 || defenders > 10){
+            return -1.0;
+        }
+        return (winPct[attackers -1][defenders -1] * 100);
+    }
+
+    public Set<Card> makeSet(Set<Card> set){
+        int[] types = new int[4]; //indexes 0 = infantry, 1 = cavalry, 2 = artillery, 3 = wild
+        Set<Card> returnSet = new HashSet<Card>();
+
+        for(Card c : set){
+            types[c.getType()]++;
+        }
+        int setType = 3;
+        for(int i = 0; i < types.length; i++){
+            if(types[i] >= 3){
+                setType = i;
+            }
+        }
+        if(setType == 3){
+            if(types[0] > 0 && types[1] > 0 && types[2] > 0){
+                int[] needed = {0, 0, 0}; //0 = not found, 1 = found
+                for(Card c : set){
+                    for(int i = 0; i < needed.length; i++){
+                        if(needed[i] == 0 && c.getType() == i){
+                            returnSet.add(c);
+                            needed[i] = 1;
+                        }
+                    }
+                }
+            }
+            else{
+                int found = 0;
+                int target = 2;
+                if(types[0] >= types[1] && types[0] >= types[2]){
+                    target = 0;
+                }
+                else if(types[1] >= types[0] && types[1] >= types[2]){
+                    target = 1;
+                }
+                for(Card c : set){
+                    if(c.getType() == target){
+                        returnSet.add(c);
+                        found++;
+                    }
+                }
+                for(Card c : set){
+                    if(found < 3 && c.getType() == 3){
+                        returnSet.add(c);
+                        found++;
+                    }
+                }
+            }
+        }
+        else{
+            int found = 0;
+            for(Card c : set){
+                if(found < 3 && c.getType() == setType){
+                    returnSet.add(c);
+                    found++;
+                }
+            }
+        }
+        //System.out.println("Number of infantry "+ types[0]);
+        //System.out.println("Number of cavalry "+types[1]);
+        //System.out.println("Number of artillery "+types[2]);
+        //System.out.println("Number of wilds "+types[3]);
+
+        return returnSet;
     }
     
 }

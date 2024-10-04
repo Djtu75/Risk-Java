@@ -7,14 +7,6 @@ import java.util.Iterator;
 
 public class PlayerLogic implements Logic {
 
-    Game mygame = null;
-    Player myplayer = null;
-
-    public void initialize(Game mygame, Player myplayer){
-        this.mygame = mygame;
-        this.myplayer = myplayer;
-    }
-
     /**
      * @return Method to tell player their turn is about to start. Intended to let player initialize variables and logic.
      */
@@ -87,7 +79,7 @@ public class PlayerLogic implements Logic {
      */
     public Set<Card> turnInCards(Snapshot s, boolean required, int currentTroops){
         if(required){
-            Set<Card> mycards = mygame.getCardData(this);
+            Set<Card> mycards = s.getUserHand();
             //Some Logic to pick which 3 to turn in
             Iterator<Card> iter = mycards.iterator();
             Card card1 = iter.next();

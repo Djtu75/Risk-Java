@@ -103,7 +103,7 @@ public class StupidLogic extends PlayerLogic {
      */
     public Set<Card> turnInCards(Snapshot s, boolean required, int currentTroops){
         if(required){
-            Set<Card> mycards = mygame.getCardData(this);
+            Set<Card> mycards = s.getUserHand();
             //Some Logic to pick which 3 to turn in
             Iterator<Card> iter = mycards.iterator();
             Card card1 = iter.next();

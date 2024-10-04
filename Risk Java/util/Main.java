@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import participant.AsherLogic;
+import participant.ExamplePlayer2;
 import participant.StupidLogic;
 
 public class Main {
@@ -16,10 +17,15 @@ public class Main {
         StupidLogic sl3 = new StupidLogic();
         StupidLogic sl4 = new StupidLogic();*/
 
-        AsherLogic sl1 = new AsherLogic();
+        /*AsherLogic sl1 = new AsherLogic();
         AsherLogic sl2 = new AsherLogic();
         AsherLogic sl3 = new AsherLogic();
-        AsherLogic sl4 = new AsherLogic();
+        AsherLogic sl4 = new AsherLogic();*/
+
+        ExamplePlayer2 sl1 = new ExamplePlayer2();
+        ExamplePlayer2 sl2 = new ExamplePlayer2();
+        ExamplePlayer2 sl3 = new ExamplePlayer2();
+        ExamplePlayer2 sl4 = new ExamplePlayer2();
 
         Player one = new Player("one", sl1);
         one.setColors(new Color(252, 186, 3), new Color(128, 252, 3));
