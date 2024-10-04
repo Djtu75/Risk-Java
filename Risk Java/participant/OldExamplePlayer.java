@@ -7,9 +7,9 @@ import java.util.Set;
 
 import util.*;
 
-public class StupidLogic extends PlayerLogic {
+public class OldExamplePlayer extends PlayerLogic {
 
-    public StupidLogic(){
+    public OldExamplePlayer(){
         super();
     }
 

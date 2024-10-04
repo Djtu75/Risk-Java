@@ -3,27 +3,22 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import participant.AsherLogic;
+import participant.ExamplePlayer1;
 import participant.ExamplePlayer2;
-import participant.StupidLogic;
+import participant.OldExamplePlayer;
 
 public class Main {
 
     public static void main(String[] args){
         System.out.println("test");
 
-        /*StupidLogic sl1 = new StupidLogic();
-        StupidLogic sl2 = new StupidLogic();
-        StupidLogic sl3 = new StupidLogic();
-        StupidLogic sl4 = new StupidLogic();*/
+        ExamplePlayer1 sl1 = new ExamplePlayer1();
+        ExamplePlayer1 sl2 = new ExamplePlayer1();
+        //ExamplePlayer1 sl3 = new ExamplePlayer1();
+        //ExamplePlayer1 sl4 = new ExamplePlayer1();
 
-        /*AsherLogic sl1 = new AsherLogic();
-        AsherLogic sl2 = new AsherLogic();
-        AsherLogic sl3 = new AsherLogic();
-        AsherLogic sl4 = new AsherLogic();*/
-
-        ExamplePlayer2 sl1 = new ExamplePlayer2();
-        ExamplePlayer2 sl2 = new ExamplePlayer2();
+        //ExamplePlayer2 sl1 = new ExamplePlayer2();
+        //ExamplePlayer2 sl2 = new ExamplePlayer2();
         ExamplePlayer2 sl3 = new ExamplePlayer2();
         ExamplePlayer2 sl4 = new ExamplePlayer2();
 

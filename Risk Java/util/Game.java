@@ -252,7 +252,7 @@ public class Game {
 
                             activePlayer.getLogic().endTurn(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn())); //Signal to player that their turn is ending
                         }
-                        wait(3000);
+                        //wait(3000);
                         if((turnNum % 500) == 0){
                             display.repaint();
                         }
@@ -268,9 +268,9 @@ public class Game {
                         winner = p;
                     }
                 }
-                System.out.println("Winner: " + winner + " Turn#: " + turnNum);
+                System.out.println("Winner: " + winner.getName() + " Turn#: " + turnNum);
                 display.dispose();
-                return "Winner: " + winner + " Turn#: " + turnNum;
+                return "Winner: " + winner.getName() + " Turn#: " + turnNum;
             }
             else{
                 return "error";

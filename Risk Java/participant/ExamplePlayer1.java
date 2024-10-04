@@ -7,9 +7,9 @@ import java.util.ArrayList;
 
 import util.*;
 
-public class AsherLogic extends PlayerLogic {
+public class ExamplePlayer1 extends PlayerLogic {
 
-    public AsherLogic(){
+    public ExamplePlayer1(){
         super();
     }
 
