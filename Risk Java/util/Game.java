@@ -92,8 +92,9 @@ public class Game {
                 //Scanner scnr = new Scanner(System.in);
                 while(!gameOver){ //Main game loop |Needs mechanism to ignore/eliminate players who have lost all territory
                     //String s = scnr.next();
-                    System.out.println(turnNum); 
-                    //wait(3000);
+                    System.out.println(turnNum);
+                    display.refreshPaint(display.getGraphics());
+                    //wait(500);
                     turnNum++;
                     
                     //Normal turn
@@ -252,7 +253,7 @@ public class Game {
 
                             activePlayer.getLogic().endTurn(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn())); //Signal to player that their turn is ending
                         }
-                        //wait(3000);
+                        //wait(500);
                         if((turnNum % 500) == 0){
                             display.repaint();
                         }
@@ -439,7 +440,7 @@ public class Game {
      */
     public int calcCardTurnIn(){
         if(totalTrades > 6){
-            return(15 + totalTrades*5);
+            return(15 + (totalTrades-6)*5);
         }
         if(totalTrades == 6){
             return 15;
