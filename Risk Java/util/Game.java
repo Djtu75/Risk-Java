@@ -16,7 +16,7 @@ public class Game {
     private Player[] players;
     private World world;
     private Card[] deck;
-    private int totalTrades;
+    private int totalTrades = 0;
     private int cardsLeft;
     private RenderEarth display = null;
     private GraphicProvince[] gp = null;
