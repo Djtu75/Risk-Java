@@ -14,6 +14,7 @@ public class Player {
     private String name;
     private Color color1 = null;
     private Color color2 = null;
+    private String profilePictureLink = "www.example.com";
 
     public Player(String name, PlayerLogic logic){
         this.name = name;
@@ -83,7 +84,7 @@ public class Player {
         this.name = name;
     }
 
-    public Color[] getColors(){
+    protected Color[] getColors(){
         Color[] c = {color1, color2};
         return c;
     }
@@ -91,6 +92,14 @@ public class Player {
     protected void setColors(Color c1, Color c2){
         this.color1 = c1;
         this.color2 = c2;
+    }
+
+    protected String getProfilePictureLink(){
+        return profilePictureLink;
+    }
+
+    protected void setProfilePictureLink(String s){
+        this.profilePictureLink = s;
     }
 
 }

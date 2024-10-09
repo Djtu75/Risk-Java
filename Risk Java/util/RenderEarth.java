@@ -5,6 +5,8 @@ import java.awt.event.*;
 import java.awt.geom.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+
 import javax.imageio.*;
 import java.awt.image.*;
 import java.util.ArrayList;
@@ -126,12 +128,35 @@ public class RenderEarth extends Frame {
         players = plays;
     }
 
-    public BufferedImage getImg(String fileName){
+    public BufferedImage getImg(String location, int type){ //0 for filename, 1 for url
         BufferedImage img = null;
-            try {
-                img = ImageIO.read(new File(fileName));
-            } catch (IOException e) {
-                System.out.println("got error" + e);
+            boolean success = true;
+            if(type == 0){
+                try {
+                    img = ImageIO.read(new File(location));
+                } catch (IOException e) {
+                    System.out.println("got error file:" + e);
+                    System.out.println(location);
+                    success = false;
+            }
+            }
+            if(type == 1){
+                try {
+                    img = ImageIO.read(new URL(location));
+                } catch (IOException e) {
+                    System.out.println("got error url:" + e);
+                    System.out.println(location);
+                    success = false;
+                }
+            }
+            
+            if(!success){
+                try {
+                    img = ImageIO.read(new File("Risk Java\\util\\nullImage.png"));
+                } catch (IOException e) {
+                    System.out.println("got error" + e);
+                }
+                
             }
         return img;
     }
@@ -256,6 +281,15 @@ public class RenderEarth extends Frame {
         graphObj.setColor(Color.BLACK);
         for(Player p : players){
             graphObj.drawString(p.getName(), startx, starty);
+            Image profile = getImg(p.getProfilePictureLink(), 1);
+            int width = profile.getWidth(getParent());
+            int height = profile.getHeight(getParent());
+            graphObj.scale(58.0/width, 58.0/height);
+            //graphObj.scale(0.1, 0.1);
+            graphObj.drawImage(profile, (int)((startx)*(width/58.0)), (int)((starty + 4)*(height/58.0)), getParent());
+            //graphObj.drawImage(profile, (startx)*(10), (starty + 10)*(10), getParent());
+            //graphObj.scale(10, 10);
+            graphObj.scale(width/58.0, height/58.0);
             startx += 0;
             starty += profileAllowance;
         }
@@ -302,8 +336,8 @@ public class RenderEarth extends Frame {
 
     public void paint(Graphics g) {
         //g.clearRect(0, 0, windowWidth, windowHeight);
-        g.drawImage(getImg("Risk Java\\util\\top-view-of-sea-in-the-ocean-background-footage-for-traveling-4k-free-video.jpg"), 0, -15, getParent());
-        g.drawImage(getImg("Risk Java\\util\\worldimg.png"), 0, -15, getParent());
+        g.drawImage(getImg("Risk Java\\util\\top-view-of-sea-in-the-ocean-background-footage-for-traveling-4k-free-video.jpg", 0), 0, -15, getParent());
+        g.drawImage(getImg("Risk Java\\util\\worldimg.png", 0), 0, -15, getParent());
         Graphics2D g2d = (Graphics2D)g;
         Color[] colors = {Color.green, Color.blue, Color.red, Color.yellow, Color.orange, Color.magenta, Color.pink, Color.cyan, Color.gray};
         
@@ -355,6 +389,6 @@ public class RenderEarth extends Frame {
         
         renderWorldWithRects(gm.getgps(), g2d);
         //renderPlayerList(players, 20, 260, 0, 15, g2d);
-        renderPlayerListProfile(players, 20, 340, g2d);
+        //renderPlayerListProfile(players, 20, 340, g2d);
     }
 }

@@ -275,7 +275,7 @@ public class Game {
 
                             activePlayer.getLogic().endTurn(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn())); //Signal to player that their turn is ending
                         }
-                        //wait(500);
+                        wait(500);
                         if((turnNum % 500) == 0){
                             display.repaint();
                         }
