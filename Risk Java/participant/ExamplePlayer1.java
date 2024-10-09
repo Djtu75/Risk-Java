@@ -2,13 +2,15 @@ package participant;
 
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.LogRecord;
 import java.util.HashSet;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import util.*;
 
 public class ExamplePlayer1 extends PlayerLogic {
-
+    GameLogger GL; 
     public ExamplePlayer1(){
         super();
     }
@@ -43,7 +45,9 @@ public class ExamplePlayer1 extends PlayerLogic {
     /**
      * @return //Asks player to place troops. Should return [int numTroopstoPlace, Province destination]
      */
+
     public Set<DeployCommand> draftPhase(Snapshot s, int numTroopstoPlace){
+        GL = GameLogger.getGameLogger();
         Set<DeployCommand> returnArray = new HashSet<DeployCommand>();
         Set<Province> myterritory = s.getMyPlayer().getTerritory();
         if(myterritory.size() <= 0){
@@ -64,13 +68,13 @@ public class ExamplePlayer1 extends PlayerLogic {
                 }
             }
         }
-        System.out.println("Has "+ borders.size()+" border territories and "+neighbors.size()+" neighboring territories");
+        GL.LogMessage(("Has "+ borders.size() +" border territories and "+ neighbors.size() +" neighboring territories").toString());
         while(placeXTroops > 0){
             for(Province  border : borders){
                 if(placeXTroops > 0){
                     returnArray.add(new DeployCommand(1,border));
                     placeXTroops--;
-                    System.out.println(s.getMyPlayer().getName() + " placed 1 troop in "+ border.getName());
+                    GL.LogMessage((s.getMyPlayer().getName() + " placed 1 troop in "+ border.getName()));
                 }else{
                     break;
                 }
@@ -125,8 +129,8 @@ public class ExamplePlayer1 extends PlayerLogic {
             }
         }
         if((attackingProvince != null) && (defendingProvince != null)){
-            System.out.println(s.getMyPlayer().getName()+" is attacking from " + attackingProvince.getName() +" Soliders: "+ attackingProvince.getNumSoldiers() +" WinPercentage: " + winPctOfPartialAttack(useXtroops, defendingProvince.getNumSoldiers()));
-            System.out.println("Defending " + defendingProvince.getName() + " with "+ defendingProvince.getNumSoldiers()+ " Soldiers");
+            GL.LogMessage((s.getMyPlayer().getName()+" is attacking from " + attackingProvince.getName() +" Soliders: "+ String.valueOf(attackingProvince.getNumSoldiers()) +" WinPercentage: " + winPctOfPartialAttack(useXtroops, defendingProvince.getNumSoldiers())));
+            GL.LogMessage(("Defending " + defendingProvince.getName() + " with "+ String.valueOf(defendingProvince.getNumSoldiers())+ " Soldiers"));
             ret = new AttackCommand(useXtroops, attackingProvince, defendingProvince);
             //return (returnArray);
             return ret;

@@ -3,10 +3,14 @@ package util;
 import java.util.Random;
 import participant.PlayerLogic;
 import java.util.Set;
+import java.util.logging.LogRecord;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.awt.*;
 import java.awt.font.ShapeGraphicAttribute;
+import java.io.IOException;
+import java.util.logging.Level;
+
 
 public class Game {
     
@@ -21,6 +25,7 @@ public class Game {
     private RenderEarth display = null;
     private GraphicProvince[] gp = null;
     private static Random rand = new Random();
+    protected GameLogger GL;
 
     public Game(Player[] players, World world, GraphicProvince[] gps){
         this.players = players;
@@ -31,8 +36,26 @@ public class Game {
     public GraphicProvince[] getgps(){
         return gp;
     }
+        protected LogRecord attackLogRecord(String attackingProvinceName, String defendingProvinceName, int attackingNum, int defendingNum){
+        LogRecord record = new LogRecord(Level.FINE, "Attcking from "+attackingProvinceName+" to "+defendingProvinceName+" with "+attackingNum+" troops attacking and "+defendingNum+" troops defending");
+        return record;
+    }
+    protected LogRecord moveLogRecord(String attackerName, String defenderName, String attackingProvinceName, String defendingProvinceName, int attackingNum, int defendingNum){
+        LogRecord record = new LogRecord(Level.FINE, "%1 Attcked %2 from %3 to %4 with %5 troops attacking and %6 troops defending");
+        return record;
+    }
+    protected LogRecord placeLogRecord(String destination, int troops){
+        LogRecord record = new LogRecord(Level.FINE, "Placed "+Integer.toString(troops)+" at "+ destination);
+        return record;
+    }
+    protected LogRecord moveAfterConqueorLogRecord(String destination, int troops){
+        LogRecord record = new LogRecord(Level.FINE, "Moved "+Integer.toString(troops)+" after conqueoring "+ destination);
+        return record;
+    }
 
     protected String startGame(int initialTroops, RenderEarth re){
+        GL = GameLogger.getGameLogger();
+        GL.LogMessage(new LogRecord(Level.INFO, "START OF GAME LOOP "));
         display = re;
         if(!started){
             started = true;
@@ -74,7 +97,7 @@ public class Game {
                 else{ //If using standard quick start, distribute even amounts of land between players and add troops randomly to that land
                     for(int i = 0; i < players.length; i++){
                         Player activePlayer = players[i];
-                        System.out.println("Initializing " + activePlayer.getName());
+                        GL.LogMessage((String)("Initializing " + activePlayer.getName()));
                         int troopsToPlace = initialTroops/players.length;
                         for(Province prov: activePlayer.getTerritory()){
                             troopsToPlace--;
@@ -92,7 +115,7 @@ public class Game {
                 //Scanner scnr = new Scanner(System.in);
                 while(!gameOver){ //Main game loop |Needs mechanism to ignore/eliminate players who have lost all territory
                     //String s = scnr.next();
-                    System.out.println(turnNum);
+                    GL.LogMessage(new LogRecord(Level.INFO, "IT IS TURN NUMBER: "+ turnNum));
                     display.refreshPaint(display.getGraphics());
                     //wait(500);
                     turnNum++;
@@ -103,7 +126,7 @@ public class Game {
                         Player activePlayer = players[i];
                         if(activePlayer.getTerritory().size() > 0 && !gameOver){
                             activePlayer.getLogic().beginTurn(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn())); //Tell player their turn is starting
-                            System.out.println("Beginning " + activePlayer.getName());
+                            GL.LogMessage(("Beginning " + activePlayer.getName()+" ------------------------------------------------------------------------------------------------------------------------------------"));
                             int cardBonus = 0;
                             //Handle cards
                             int troopsToPlace = calcTroopAllot(activePlayer); //Calc troops player should get to place
@@ -170,7 +193,6 @@ public class Game {
                             phasefinished = false;
                             while(!phasefinished){
                                 Set<DeployCommand> action = activePlayer.getLogic().draftPhase(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn()), troopsToPlace);
-                                //System.out.println("Placing " + activePlayer.getName());
                                 Object[] parameters = {activePlayer, troopsToPlace};
                                 if(actionIsValid("placeTroops", action, parameters)){
                                     for(DeployCommand dc : action){
@@ -179,6 +201,7 @@ public class Game {
                                         troopsToPlace -= numTroopsPlaced;
                                         destination.addSoldiers(numTroopsPlaced);
                                         activePlayer.setNumsoldiers(activePlayer.getNumSoldiers() + numTroopsPlaced);
+                                        GL.LogMessage("Placed "+ numTroopsPlaced + " in "+ destination.getName());
                                     }
                                 }
                                 else{
@@ -195,8 +218,6 @@ public class Game {
                             while(!phasefinished){
                                 AttackCommand action = activePlayer.getLogic().attackPhase(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn())); //Prompt player to choose number of troops to attack with, and the two provinces involved
                                 Object[] parameters = {activePlayer};
-                                //System.out.println("Attacking " + activePlayer.getName());
-                                //System.out.println("Valid? " + actionIsValid("attacking", action, parameters));
                                 if(actionIsValid("attacking", action, parameters)){
                                     int attackingTroops = action.getnumAttackingTroops();
                                     Province attackingProvince = action.getAttackingProvince();
@@ -206,17 +227,19 @@ public class Game {
                                     attackingProvince.getOwner().setNumsoldiers(attackingProvince.getOwner().getNumSoldiers() + result[1]*-1);
                                     defendingProvince.addSoldiers(result[0]*-1); //remove killed soldiers
                                     defendingProvince.getOwner().setNumsoldiers(defendingProvince.getOwner().getNumSoldiers() + result[0]*-1);
-                                    //System.out.println("Result " +result[0]);
+                                    GL.LogMessage("Attackers killed: " + (Integer.valueOf(result[1])).toString() + " Defenders killed: " + (Integer.valueOf(result[0])).toString());
                                     activePlayer.getLogic().attackPhaseResults(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn()), result);
                                     if(defendingProvince.getNumSoldiers() == 0){ //If no troops left in defending province, that province is conquered
                                         gainCard = true;
                                         activePlayer.addTerritory(defendingProvince);
                                         int followUpAction = activePlayer.getLogic().moveAfterConquer(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn()), attackingProvince, defendingProvince);
                                         Object[] parameters2 = {attackingTroops, attackingProvince};
+                                        GL.LogMessage(defendingProvince.getName()+ " has been captured by "+attackingProvince.getOwner().getName());
                                         if(actionIsValid("moveAfterConquer", followUpAction, parameters2)){
                                             int troopsToMove = followUpAction;
                                             attackingProvince.addSoldiers(troopsToMove*-1);
                                             defendingProvince.addSoldiers(troopsToMove);
+                                            GL.LogMessage(attackingProvince.getOwner().getName()+ " has moved "+ troopsToMove + " into "+ defendingProvince.getName());
                                         }
                                         else{ //If invalid input, move minimum number of troops
                                             int troopsToMove = attackingTroops;
@@ -238,7 +261,6 @@ public class Game {
                             while(!phasefinished){
                                 MoveCommand action = activePlayer.getLogic().movePhase(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn()));
                                 Object[] parameters = {activePlayer};
-                                //System.out.println("Moving " + activePlayer.getName());
                                 if(actionIsValid("moving", action, parameters)){
                                     int movingTroops = action.getnumMovingTroops();
                                     Province sourceProvince = action.getSourceProvince();
@@ -269,7 +291,7 @@ public class Game {
                         winner = p;
                     }
                 }
-                System.out.println("Winner: " + winner.getName() + " Turn#: " + turnNum);
+                GL.LogMessage(new LogRecord(Level.SEVERE, "Winner: " + winner.getName() + " Turn#: " + turnNum));
                 display.dispose();
                 return "Winner: " + winner.getName() + " Turn#: " + turnNum;
             }
@@ -323,7 +345,7 @@ public class Game {
         for(Player p: players){
             if(p != null){
                 if(world.getProvinces().size() == p.getTerritory().size()){
-                    System.out.println("gameover = true");
+                    GL.LogMessage("gameover = true");
                     return true;
                 }
             }
@@ -504,7 +526,6 @@ public class Game {
 
         if(type.equals("placeTroops")){
             try{
-                System.out.println("attempting to place");
                 Player activePlayer = (Player) params[0];
                 int availableTroops = (int) params[1];
                 Set<DeployCommand> commandSet = (Set<DeployCommand>) action;
@@ -533,12 +554,16 @@ public class Game {
 
             }
             catch(Exception e){
-                System.out.println("Got error: " + e);
+                GL.LogMessage("Got error in actionIsValid DRAFT: " + e);
                 return false;
             }
         }
         else if(type.equals("attacking")){
             try{
+                if(action == null){
+                    GL.LogMessage("ATTACK is null ending the attack phase");
+                    return false;
+                }
                 Player activePlayer = (Player) params[0];
                 AttackCommand command = (AttackCommand) action;
                 int attackingTroops = command.getnumAttackingTroops();
@@ -547,14 +572,17 @@ public class Game {
                 //System.out.println(attackingProvince.getOwner() == activePlayer);
                 //System.out.println(defendingProvince.getOwner() != activePlayer);
                 //System.out.println(attackingTroops < attackingProvince.getNumSoldiers());
-
+                if(command == null || attackingProvince == null || defendingProvince == null){
+                    GL.LogMessage("ATTACK is null ending the attack phase");
+                    return false;
+                }
                 if(attackingProvince.getOwner() == activePlayer && defendingProvince.getOwner() != activePlayer && attackingTroops < attackingProvince.getNumSoldiers()){
                     return true;
                 }
 
             }
             catch(Exception e){
-                System.out.println("Got error: " + e);
+                GL.LogMessage("Got error in actionIsValid ATTACK: " + e);
                 return false;
             }
         }
@@ -570,7 +598,7 @@ public class Game {
 
             }
             catch(Exception e){
-                System.out.println("Got error: " + e);
+                GL.LogMessage(("Got error in actionIsValid MOVE-AFTER-CONQUER: " + e));
                 return false;
             }
         }
@@ -589,7 +617,7 @@ public class Game {
 
             }
             catch(Exception e){
-                System.out.println("Got error: " + e);
+                GL.LogMessage("Got error in actionIsValid MOVING: " + e);
                 return false;
             }
         }
@@ -630,7 +658,7 @@ public class Game {
 
             }
             catch(Exception e){
-                System.out.println("Got error: " + e);
+                GL.LogMessage("Got error in actionIsValid TURN-IN-CARDS: " + e);
                 return false;
             }
         }

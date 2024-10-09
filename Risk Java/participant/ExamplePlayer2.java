@@ -4,11 +4,13 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 import util.*;
 
 public class ExamplePlayer2 extends PlayerLogic {
-
+    GameLogger GL;
     public ExamplePlayer2(){
         super();
     }
@@ -31,6 +33,7 @@ public class ExamplePlayer2 extends PlayerLogic {
      * @return //Asks player to place troops. Should return [int numTroopstoPlace, Province destination]
      */
     public Set<DeployCommand> draftPhase(Snapshot s, int numTroopstoPlace){
+        GL = GameLogger.getGameLogger();
         Set<DeployCommand> returnSet = new HashSet<DeployCommand>();
         while(numTroopstoPlace > 0){
             for(Province p: s.getMyPlayer().getTerritory()){
