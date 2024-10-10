@@ -152,8 +152,10 @@ public class Game {
                                     }
                                     //tempCards.removeAll(cardsToTurnIn);
                                     activePlayer.setCards(tempCards);
+                                    GL.LogMessage(new LogRecord(Level.INFO, activePlayer.getName()+" turned in cards and got "+ cardBonus+ " more troops!"));
                                 }
                                 else{ //If player attempts to turn in invalid set, clear player's hand
+                                    GL.LogMessage(new LogRecord(Level.SEVERE, activePlayer.getName()+" tried to turn in invalid hand & their hand was cleared!"));
                                     Set<Card> tempCards = activePlayer.getCards();
                                     for(Card c: tempCards){
                                         returnCard(c);
@@ -267,9 +269,11 @@ public class Game {
                                     Province destinationProvince = action.getTargetProvince();
                                     destinationProvince.addSoldiers(movingTroops);
                                     sourceProvince.addSoldiers(movingTroops*-1);
+                                    GL.LogMessage(Level.FINE, activePlayer.getName()+ " moved "+ String.valueOf(movingTroops)+ " from "+ sourceProvince.getName()+ " to "+ destinationProvince.getName());
                                 }
                                 else{
                                     phasefinished = true;
+                                    GL.LogMessage(Level.WARNING, activePlayer.getName()+ " tried and invalid movement after their turn");
                                 }
                             }
 

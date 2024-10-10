@@ -90,6 +90,11 @@ public class GameLogger {
         System.out.println(record.getMessage());
         Q.add(record);
     }
+    public void LogMessage(Level lvl, String message){
+        LogRecord record = new LogRecord(lvl, message);
+        System.out.println(record.getMessage());
+        Q.add(record);
+    }
     public void LogMessage(String s){
         System.out.println(s);
         LogRecord record = new LogRecord(Level.FINER, s);
