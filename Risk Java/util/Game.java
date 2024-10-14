@@ -33,7 +33,7 @@ public class Game {
         this.gp = gps;
     }
 
-    public GraphicProvince[] getgps(){
+    protected GraphicProvince[] getgps(){
         return gp;
     }
         protected LogRecord attackLogRecord(String attackingProvinceName, String defendingProvinceName, int attackingNum, int defendingNum){
@@ -113,11 +113,12 @@ public class Game {
                 
                 }
                 //Scanner scnr = new Scanner(System.in);
+                boolean firstTurn = true;
+                display.refreshPaint(display.getGraphics());
+                wait(7000);
                 while(!gameOver){ //Main game loop |Needs mechanism to ignore/eliminate players who have lost all territory
                     //String s = scnr.next();
                     GL.LogMessage(new LogRecord(Level.INFO, "IT IS TURN NUMBER: "+ turnNum));
-                    display.refreshPaint(display.getGraphics());
-                    //wait(500);
                     turnNum++;
                     
                     //Normal turn
@@ -192,6 +193,9 @@ public class Game {
                             }
                             //Handle placement phase
                             troopsToPlace += cardBonus;
+                            if(firstTurn){
+                                troopsToPlace += i*2; //Gives two troops to player for the later they have to move in the first round
+                            }
                             phasefinished = false;
                             while(!phasefinished){
                                 Set<DeployCommand> action = activePlayer.getLogic().draftPhase(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn()), troopsToPlace);
@@ -274,11 +278,17 @@ public class Game {
                                 }
                                 else{
                                     phasefinished = true;
-                                    GL.LogMessage(Level.WARNING, activePlayer.getName()+ " tried an invalid movement after their turn");
+                                    if(action.getSourceProvince() != null && action.getTargetProvince() != null){
+                                        GL.LogMessage(Level.WARNING, activePlayer.getName()+ " tried an invalid movement after their turn. Attempted to move " + action.getnumMovingTroops() + " troops from " + action.getSourceProvince().getName() + " to " + action.getTargetProvince().getName() + ".");
+                                    }
+                                    else{
+                                        GL.LogMessage(Level.WARNING, activePlayer.getName()+ " tried an invalid movement after their turn. Source and/or target province was null.");
+                                    }
                                 }
                             }
 
                             activePlayer.getLogic().endTurn(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn())); //Signal to player that their turn is ending
+                            firstTurn = false;
                         }
                         wait(500);
                         if((turnNum % 500) == 0){
