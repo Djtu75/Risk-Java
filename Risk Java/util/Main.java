@@ -183,7 +183,7 @@ public class Main {
 
         RenderEarth test = new RenderEarth(graphprovs, players, game);
 
-        String result = game.startGame(240, test);
+        String result = game.startGame(4*25, test);
         System.out.println("Result: " + result);
     }
 
