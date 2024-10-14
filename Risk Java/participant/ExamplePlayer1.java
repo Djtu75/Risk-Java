@@ -74,7 +74,7 @@ public class ExamplePlayer1 extends PlayerLogic {
                 if(placeXTroops > 0){
                     returnArray.add(new DeployCommand(1,border));
                     placeXTroops--;
-                    GL.LogMessage((s.getMyPlayer().getName() + " placed 1 troop in "+ border.getName()));
+                    //GL.LogMessage((s.getMyPlayer().getName() + " placed 1 troop in "+ border.getName()));
                 }else{
                     break;
                 }
@@ -129,8 +129,8 @@ public class ExamplePlayer1 extends PlayerLogic {
             }
         }
         if((attackingProvince != null) && (defendingProvince != null)){
-            GL.LogMessage((s.getMyPlayer().getName()+" is attacking from " + attackingProvince.getName() +" Soliders: "+ String.valueOf(attackingProvince.getNumSoldiers()) +" WinPercentage: " + winPctOfPartialAttack(useXtroops, defendingProvince.getNumSoldiers())));
-            GL.LogMessage(("Defending " + defendingProvince.getName() + " with "+ String.valueOf(defendingProvince.getNumSoldiers())+ " Soldiers"));
+            //GL.LogMessage((s.getMyPlayer().getName()+" is attacking from " + attackingProvince.getName() +" Soliders: "+ String.valueOf(attackingProvince.getNumSoldiers()) +" WinPercentage: " + winPctOfPartialAttack(useXtroops, defendingProvince.getNumSoldiers())));
+            //GL.LogMessage(("Defending " + defendingProvince.getName() + " with "+ String.valueOf(defendingProvince.getNumSoldiers())+ " Soldiers"));
             ret = new AttackCommand(useXtroops, attackingProvince, defendingProvince);
             //return (returnArray);
             return ret;
