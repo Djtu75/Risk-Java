@@ -639,7 +639,7 @@ public class Game {
                             realProvinceSource = true;
                         }
                     }
-                System.out.println("" + realProvinceDestination + realProvinceSource);
+                GL.LogMessage("Real Destination: " + realProvinceDestination +" Real Source: "+ realProvinceSource);
 
                 if(realProvinceDestination && realProvinceSource && source != destination && source.getOwner() == activePlayer &&
                 possibleDestinations(source).contains(destination) && source.getNumSoldiers() > movingTroops && movingTroops > 0){
