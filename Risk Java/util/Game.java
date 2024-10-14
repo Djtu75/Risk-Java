@@ -229,6 +229,7 @@ public class Game {
                                     attackingProvince.getOwner().setNumsoldiers(attackingProvince.getOwner().getNumSoldiers() + result[1]*-1);
                                     defendingProvince.addSoldiers(result[0]*-1); //remove killed soldiers
                                     defendingProvince.getOwner().setNumsoldiers(defendingProvince.getOwner().getNumSoldiers() + result[0]*-1);
+                                    GL.LogMessage(activePlayer.getName()+ " is attacking "+ defendingProvince.getName()+" tropps:"+String.valueOf(defendingProvince.getNumSoldiers())+ " from "+ attackingProvince.getName()+ " troops:" + String.valueOf(attackingProvince.getNumSoldiers()));
                                     GL.LogMessage("Attackers killed: " + (Integer.valueOf(result[1])).toString() + " Defenders killed: " + (Integer.valueOf(result[0])).toString());
                                     activePlayer.getLogic().attackPhaseResults(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn()), result);
                                     if(defendingProvince.getNumSoldiers() == 0){ //If no troops left in defending province, that province is conquered
@@ -621,7 +622,7 @@ public class Game {
 
             }
             catch(Exception e){
-                GL.LogMessage("Got error in actionIsValid MOVING: " + e);
+                GL.LogMessage("Got error in actionIsValid MOVING: ");
                 return false;
             }
         }
