@@ -1,0 +1,20 @@
+World{name: MoveTest}
+Province{name: prov1 | adjacent: prov2}
+Province{name: prov2 | adjacent: prov1, prov3}
+Province{name: prov3 | adjacent: prov2, prov4, prov6, prov8}
+Province{name: prov4 | adjacent: prov3, prov5}
+Province{name: prov5 | adjacent: prov4}
+Province{name: prov6 | adjacent: prov3, prov7}
+Province{name: prov7 | adjacent: prov6}
+Province{name: prov8 | adjacent: prov3, prov9}
+Province{name: prov9 | adjacent: prov8}
+
+Graphics{name: prov1 | coords: [500, 500, 500, 550, 550, 550, 550, 500]}
+Graphics{name: prov2 | coords: [500, 450, 500, 500, 550, 500, 550, 450]}
+Graphics{name: prov3 | coords: [500, 400, 500, 450, 550, 450, 550, 400]}
+Graphics{name: prov4 | coords: [450, 400, 450, 450, 500, 450, 500, 400]}
+Graphics{name: prov5 | coords: [400, 400, 400, 450, 450, 450, 450, 400]}
+Graphics{name: prov6 | coords: [550, 400, 550, 450, 600, 450, 600, 400]}
+Graphics{name: prov7 | coords: [600, 400, 600, 450, 650, 450, 650, 400]}
+Graphics{name: prov8 | coords: [500, 350, 500, 400, 550, 400, 550, 350]}
+Graphics{name: prov9 | coords: [500, 300, 500, 350, 550, 350, 550, 300]}

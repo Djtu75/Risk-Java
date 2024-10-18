@@ -25,6 +25,12 @@ import java.util.Set;
  * There must be at least 3 points in the array, there is no upper limit. 
  * IMPORTANT: The name given must match a name of an existing province.
  * 
+ * If you don't want to deal with writing out each coord, neither do I! That's why I made a simple program in Example01.java to
+ * do it for you! Simply run Example01.java, and it will pull up a beta version of the world map. All you have to do is click anywhere
+ * on the screen for each point you want in your shape, then close the window. It will print out something like this in the terminal:
+ * private int[] name = {410, 270, 570, 276, 558, 390, 401, 370};
+ * You can then copy paste that array into the coords section of a Graphics (replacing {} with []), and you're good to go.
+ * 
  * Finally, continents can be initialized as so-
  * Continent{name: INSERT_NAME | provs: PROVINCE_1, PROVINCE_2, PROVINCE_N | bonus: INSERT_INTEGER}
  * 

@@ -14,7 +14,7 @@ public class Player {
     private String name;
     private Color color1 = null;
     private Color color2 = null;
-    private String profilePictureLink = "www.example.com";
+    private String profilePictureLink = null;
 
     public Player(String name, PlayerLogic logic){
         this.name = name;

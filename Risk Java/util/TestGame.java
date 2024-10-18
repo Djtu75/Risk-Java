@@ -10,9 +10,10 @@ import java.awt.*;
 import java.awt.font.ShapeGraphicAttribute;
 import java.io.IOException;
 import java.util.logging.Level;
+import java.util.Iterator;
 
 
-public class Game {
+public class TestGame extends Game {
     
     private boolean started = false;
     private boolean gameOver = false;
@@ -25,12 +26,26 @@ public class Game {
     private RenderEarth display = null;
     private GraphicProvince[] gp = null;
     private static Random rand = new Random();
+    private boolean enableDraft;
+    private boolean enableCards;
+    private boolean givePlayerCards;
+    private boolean givePlayerTroops;
+    private boolean oneProvinceStart;
+    private String provinceName;
+    
     protected GameLogger GL;
 
-    public Game(Player[] players, World world, GraphicProvince[] gps){
+    public TestGame(Player[] players, World world, GraphicProvince[] gps, boolean enableDraft, boolean enableCards, boolean givePlayerCards, boolean givePlayerTroops, boolean oneProvinceStart, String provinceName){
+        super(players, world, gps);
         this.players = players;
         this.world = world;
         this.gp = gps;
+        this.enableDraft = enableDraft;
+        this.enableCards = enableCards;
+        this.givePlayerCards = givePlayerCards;
+        this.givePlayerTroops = givePlayerTroops;
+        this.oneProvinceStart = oneProvinceStart;
+        this.provinceName = provinceName;
     }
 
     protected GraphicProvince[] getgps(){
@@ -60,7 +75,7 @@ public class Game {
         if(!started){
             started = true;
             if (this.validityCheck()){ //Check that world and players are useable
-                randomOrder(players); //Sort player array in random order
+                //randomOrder(players); //Sort player array in random order
                 assignLand(); //Distribute land to players
                 deck = generateDeck(); //Create deck of cards
                 cardsLeft = deck.length; //array should change size as cards are drawn and turned in, this keeps track
@@ -73,17 +88,44 @@ public class Game {
                     Player activePlayer = players[i];
                     GL.LogMessage((String)("Initializing " + activePlayer.getName()));
                     int troopsToPlace = initialTroops/players.length;
-                    for(Province prov: activePlayer.getTerritory()){
-                        troopsToPlace--;
-                        prov.setNumsoldiers(1);
-                        activePlayer.setNumsoldiers(activePlayer.getNumSoldiers() + 1);
+                    if(givePlayerTroops && i == 0){
+                        troopsToPlace += 50;
                     }
-                    while(troopsToPlace > 0){
-                        Object[] temp = activePlayer.getTerritory().toArray();
-                        ((Province) temp[rand.nextInt(temp.length)]).addSoldiers(1);
-                        activePlayer.setNumsoldiers(activePlayer.getNumSoldiers() + 1);
-                        troopsToPlace--;
+                    if(!oneProvinceStart){
+                        for(Province prov: activePlayer.getTerritory()){
+                            troopsToPlace--;
+                            prov.setNumsoldiers(1);
+                            activePlayer.setNumsoldiers(activePlayer.getNumSoldiers() + 1);
+                        }
+                        while(troopsToPlace > 0){
+                            Object[] temp = activePlayer.getTerritory().toArray();
+                            ((Province) temp[rand.nextInt(temp.length)]).addSoldiers(1);
+                            activePlayer.setNumsoldiers(activePlayer.getNumSoldiers() + 1);
+                            troopsToPlace--;
+                        }
                     }
+                    else{
+                        if(i == 0){
+                            while(activePlayer.getTerritory().size() > 0){
+                                Iterator<Province> iter = activePlayer.getTerritory().iterator();
+                                Province p = iter.next();
+                                players[rand.nextInt(1,players.length)].addTerritory(p);
+                            }
+                            for(Province p: world.getProvinces()){
+                                if(p.getName().equals(provinceName)){
+                                    p.getOwner().removeTerritory(p);
+                                    activePlayer.addTerritory(p);
+                                    p.setNumsoldiers(troopsToPlace);
+                                }
+                            }
+                        }
+                        else{
+                            for(Province p: activePlayer.getTerritory()){
+                                p.setNumsoldiers(1);
+                            }
+                        }
+
+                    } 
                 
                 }
                 //Scanner scnr = new Scanner(System.in);
@@ -105,43 +147,14 @@ public class Game {
                             int cardBonus = 0;
                             //Handle cards
                             int troopsToPlace = calcTroopAllot(activePlayer); //Calc troops player should get to place
-                            if(activePlayer.getNumCards() >= 5){ //If 5 or more cards in hand, force turn in
-                                Set<Card> cardsToTurnIn = activePlayer.getLogic().turnInCards(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn()), true, troopsToPlace);
-                                Object[] parameters = {activePlayer};
-                                if(actionIsValid("turnInCards", cardsToTurnIn, parameters)){
-                                    //Set<Card> cardsToTurnIn = new HashSet<Card>(Arrays.asList((Card)action[0], (Card)action[1], (Card)action[2]));
-                                    for(Card c: cardsToTurnIn){ //Returns cards to deck and applies +2 troops if owned by activeplayer
-                                        Province cardProv = c.getProvince();
-                                        for(Province p : activePlayer.getTerritory()){
-                                            if(cardProv != null && p == cardProv){
-                                                p.addSoldiers(2);
-                                            }
-                                        }
-                                        returnCard(c);
+                            if(enableCards){
+                                if(givePlayerCards && firstTurn && i == 0){
+                                    for(int k = 0; k < 5; k++){
+                                        activePlayer.addCard(drawCard());
                                     }
-                                    totalTrades++;
-                                    cardBonus = calcCardTurnIn();
-                                    Set<Card> tempCards = activePlayer.getCards();
-                                    for(Card c: cardsToTurnIn){
-                                        tempCards.remove(c);
-                                    }
-                                    //tempCards.removeAll(cardsToTurnIn);
-                                    activePlayer.setCards(tempCards);
-                                    GL.LogMessage(new LogRecord(Level.INFO, activePlayer.getName()+" turned in cards and got "+ cardBonus+ " more troops!"));
                                 }
-                                else{ //If player attempts to turn in invalid set, clear player's hand
-                                    GL.LogMessage(new LogRecord(Level.SEVERE, activePlayer.getName()+" tried to turn in invalid hand & their hand was cleared!"));
-                                    Set<Card> tempCards = activePlayer.getCards();
-                                    for(Card c: tempCards){
-                                        returnCard(c);
-                                    }
-                                    tempCards.clear();
-                                    activePlayer.setCards(tempCards);
-                                }
-                            }
-                            else{ //If fewer than 5 cards, ask player to turn in cards (if invalid input, do nothing as it is not required)
-                                if(activePlayer.getCards().size() >= 3){
-                                    Set<Card> cardsToTurnIn = activePlayer.getLogic().turnInCards(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn()), false, troopsToPlace);
+                                if(activePlayer.getNumCards() >= 5){ //If 5 or more cards in hand, force turn in
+                                    Set<Card> cardsToTurnIn = activePlayer.getLogic().turnInCards(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn()), true, troopsToPlace);
                                     Object[] parameters = {activePlayer};
                                     if(actionIsValid("turnInCards", cardsToTurnIn, parameters)){
                                         //Set<Card> cardsToTurnIn = new HashSet<Card>(Arrays.asList((Card)action[0], (Card)action[1], (Card)action[2]));
@@ -162,13 +175,53 @@ public class Game {
                                         }
                                         //tempCards.removeAll(cardsToTurnIn);
                                         activePlayer.setCards(tempCards);
+                                        GL.LogMessage(new LogRecord(Level.INFO, activePlayer.getName()+" turned in cards and got "+ cardBonus+ " more troops!"));
+                                    }
+                                    else{ //If player attempts to turn in invalid set, clear player's hand
+                                        GL.LogMessage(new LogRecord(Level.SEVERE, activePlayer.getName()+" tried to turn in invalid hand & their hand was cleared!"));
+                                        Set<Card> tempCards = activePlayer.getCards();
+                                        for(Card c: tempCards){
+                                            returnCard(c);
+                                        }
+                                        tempCards.clear();
+                                        activePlayer.setCards(tempCards);
+                                    }
+                                }
+                                else{ //If fewer than 5 cards, ask player to turn in cards (if invalid input, do nothing as it is not required)
+                                    if(activePlayer.getCards().size() >= 3){
+                                        Set<Card> cardsToTurnIn = activePlayer.getLogic().turnInCards(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn()), false, troopsToPlace);
+                                        Object[] parameters = {activePlayer};
+                                        if(actionIsValid("turnInCards", cardsToTurnIn, parameters)){
+                                            //Set<Card> cardsToTurnIn = new HashSet<Card>(Arrays.asList((Card)action[0], (Card)action[1], (Card)action[2]));
+                                            for(Card c: cardsToTurnIn){ //Returns cards to deck and applies +2 troops if owned by activeplayer
+                                                Province cardProv = c.getProvince();
+                                                for(Province p : activePlayer.getTerritory()){
+                                                    if(cardProv != null && p == cardProv){
+                                                        p.addSoldiers(2);
+                                                    }
+                                                }
+                                                returnCard(c);
+                                            }
+                                            totalTrades++;
+                                            cardBonus = calcCardTurnIn();
+                                            Set<Card> tempCards = activePlayer.getCards();
+                                            for(Card c: cardsToTurnIn){
+                                                tempCards.remove(c);
+                                            }
+                                            //tempCards.removeAll(cardsToTurnIn);
+                                            activePlayer.setCards(tempCards);
+                                        }
                                     }
                                 }
                             }
+                            
                             //Handle placement phase
                             troopsToPlace += cardBonus;
                             if(firstTurn){
                                 troopsToPlace += i*2; //Gives two troops to player for the later they have to move in the first round
+                            }
+                            if(!enableDraft){
+                                troopsToPlace = cardBonus;
                             }
                             phasefinished = false;
                             while(!phasefinished){

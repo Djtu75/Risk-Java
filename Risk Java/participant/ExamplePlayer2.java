@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.awt.Color;
 
 import util.*;
 
@@ -69,6 +70,7 @@ public class ExamplePlayer2 extends PlayerLogic {
         }
         int useXtroops = 3;
         AttackCommand command = new AttackCommand(useXtroops, attackingProvince, defendingProvince);
+        
         return (command);
 
     }
@@ -202,6 +204,18 @@ public class ExamplePlayer2 extends PlayerLogic {
             }
         }
         return bordersEnemy;
+    }
+
+    public String getCustomName(){
+        return null;
+    }
+
+    public Color[] getCustomColor(){
+        return null;
+    }
+
+    public String getCustomProfile(){
+        return null;
     }
     
 }

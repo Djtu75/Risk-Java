@@ -92,8 +92,8 @@ public class Example01 extends Frame {
         public void mouseReleased(MouseEvent e) {}
         public void mouseEntered(MouseEvent e) {}
         public void mouseExited(MouseEvent e) {
-            convertRectDatatoArray();
-            array.clear();
+            //convertRectDatatoArray();
+            //array.clear();
         }  
         public void mouseClicked(MouseEvent e) {
             Point p = e.getPoint();

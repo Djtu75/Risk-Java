@@ -1,0 +1,6 @@
+World{name: CardTest}
+Province{name: prov1 | adjacent: prov2}
+Province{name: prov2 | adjacent: prov1}
+
+Graphics{name: prov1 | coords: [150, 150, 150, 200, 200, 200, 200, 150]}
+Graphics{name: prov2 | coords: [200, 150, 250, 150, 250, 200, 200, 200]}

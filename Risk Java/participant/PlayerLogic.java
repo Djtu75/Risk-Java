@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.awt.Color;
 
 public class PlayerLogic implements Logic {
 
@@ -92,6 +93,37 @@ public class PlayerLogic implements Logic {
             return (new HashSet<Card>(Arrays.asList()));
         }
 
+    }
+
+    /**
+     * @return This lets you choose a custom player name to show on the leaderboard.
+     * 
+     */
+    public String getCustomName(){
+        String name = "PLACEHOLDER";
+        //Return null if you want to be assigned a number 1-4 randomly. 
+        return null;
+    }
+
+    /**
+     * @return This lets you choose a custom player color to show on the map. Needs to return an array of dimension two.
+     * The two colors are used as the corners of a gradient, so if you want to be one solid color, return the same color twice.
+     * 
+     */
+    public Color[] getCustomColor(){
+        Color[] colors = {new Color(255,255,255), new Color(255,255,255)};
+        //Return null if you want to be assigned a random color.
+        return null;
+    }
+
+    /**
+     * @return This lets you choose a custom player profile to show on the map. Needs to be a url.
+     * 
+     */
+    public String getCustomProfile(){
+        String image = "https://waapple.org/wp-content/uploads/2021/06/Variety_Cosmic-Crisp-transparent-658x677.png";
+        //Return null if you don't want a profile picture.
+        return null;
     }
 
 }

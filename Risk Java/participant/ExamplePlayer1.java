@@ -6,6 +6,7 @@ import java.util.logging.LogRecord;
 import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.logging.Level;
+import java.awt.Color;
 
 import util.*;
 
@@ -300,6 +301,18 @@ public class ExamplePlayer1 extends PlayerLogic {
         //System.out.println("Number of wilds "+types[3]);
 
         return returnSet;
+    }
+
+    public String getCustomName(){
+        return null;
+    }
+
+    public Color[] getCustomColor(){
+        return null;
+    }
+
+    public String getCustomProfile(){
+        return null;
     }
     
 }
