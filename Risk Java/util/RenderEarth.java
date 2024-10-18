@@ -17,6 +17,7 @@ public class RenderEarth extends Frame {
     private static int windowHeight = 860;
 
     private GraphicProvince[] provinces;
+    private String[] backgroundImages;
     private Player[] players;
     private Game gm;
 
@@ -84,9 +85,10 @@ public class RenderEarth extends Frame {
     }
     
 
-    public RenderEarth(GraphicProvince[] provs, Player[] plays, Game game) {
+    public RenderEarth(GraphicProvince[] provs, String[] backgroundImages, Player[] plays, Game game) {
         super("Java 2D Risk World Map");
         provinces = provs;
+        this.backgroundImages = backgroundImages;
         players = plays;
         gm = game;
         setSize(windowWidth,windowHeight);
@@ -336,8 +338,11 @@ public class RenderEarth extends Frame {
 
     public void paint(Graphics g) {
         //g.clearRect(0, 0, windowWidth, windowHeight);
-        g.drawImage(getImg("Risk Java\\util\\top-view-of-sea-in-the-ocean-background-footage-for-traveling-4k-free-video.jpg", 0), 0, -15, getParent());
-        g.drawImage(getImg("Risk Java\\util\\worldimg.png", 0), 0, -15, getParent());
+        for(String s: backgroundImages){
+            g.drawImage(getImg(s, 0), 0, -15, getParent());
+        }
+        //g.drawImage(getImg("Risk Java\\util\\top-view-of-sea-in-the-ocean-background-footage-for-traveling-4k-free-video.jpg", 0), 0, -15, getParent());
+        //g.drawImage(getImg("Risk Java\\util\\worldimg.png", 0), 0, -15, getParent());
         Graphics2D g2d = (Graphics2D)g;
         Color[] colors = {Color.green, Color.blue, Color.red, Color.yellow, Color.orange, Color.magenta, Color.pink, Color.cyan, Color.gray};
         

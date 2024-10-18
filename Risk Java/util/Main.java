@@ -39,8 +39,9 @@ public class Main {
         World world = MapReader.readFile("Risk Java\\util\\BasicWorld.txt");
         
         Game game = new Game(players, world, world.getGraphicProvinces());
+        String[] backgroundImages = {"Risk Java\\util\\top-view-of-sea-in-the-ocean-background-footage-for-traveling-4k-free-video.jpg", "Risk Java\\util\\worldimg.png"};
 
-        RenderEarth test = new RenderEarth(world.getGraphicProvinces(), players, game);
+        RenderEarth test = new RenderEarth(world.getGraphicProvinces(), backgroundImages, players, game);
 
         String result = game.startGame(4*25, test);
         System.out.println("Result: " + result);

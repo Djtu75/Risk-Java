@@ -7,6 +7,29 @@ import java.util.HashSet;
 import java.util.Scanner; // Import the Scanner class to read text files
 import java.util.Set;
 
+//This file reads and interprets the data from a text file into a world object for games.
+/*
+ * How to create a map data file:
+ * 
+ * You can name your map by using the convention-
+ * World{name: INSERT_NAME_HERE}
+ * 
+ * Similarly you can create a province by using-
+ * Province{name: INSERT_NAME_HERE | adjacent: ADJPROVINCE_1, ADJPROVINCE_2, ADJPROVINCE_N}
+ * There can be any number of adjacent provinces. The way the interpreter works is it does mutliple passes, 
+ * so you can use a province name before actually initializing that province.
+ * 
+ * Then, for each province you must include a graphics object that tells the renderer where to put it on the map-
+ * Graphics{name: INSERT_NAME_PROVINCE | coords: [X_COORD_1, Y_COORD_1, X_COORD_2, Y_COORD_2, X_COORD_N, Y_COORD_N]}
+ * 
+ * There must be at least 3 points in the array, there is no upper limit. 
+ * IMPORTANT: The name given must match a name of an existing province.
+ * 
+ * Finally, continents can be initialized as so-
+ * Continent{name: INSERT_NAME | provs: PROVINCE_1, PROVINCE_2, PROVINCE_N | bonus: INSERT_INTEGER}
+ * 
+ */
+
 public class MapReader {
 
     public static int find(Province[] p, String search){
@@ -19,6 +42,11 @@ public class MapReader {
         return index;
     }
 
+    /**
+     * @param filename
+     * @return This will read a file and return the world object associated with the data file. 
+     * For instructions on how to create a file, read the comments in MapReader.java.
+     */
     protected static World readFile(String filename){
         try {
             
@@ -261,8 +289,4 @@ public class MapReader {
         return null;
     }
 
-
-  public static void main(String[] args) {
-    readFile("Risk Java\\util\\BasicWorld.txt");
-  }
 }
