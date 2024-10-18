@@ -8,11 +8,13 @@ public class World {
     private String name;
     private Set<Continent> continents;
     private Set<Province> provinces;
+    private GraphicProvince[] gps;
 
     public World(String name){
         this.name = name;
         continents = new HashSet<Continent>();
         provinces = new HashSet<Province>();
+        gps = null;
     }
 
     public String getName() {
@@ -39,6 +41,12 @@ public class World {
     protected void addProvince(Province province) {
         this.provinces.add(province);
     }
+    public GraphicProvince[] getGraphicProvinces() {
+        return gps;
+    }
+    protected void setGraphicProvinces(GraphicProvince[] gps) {
+        this.gps = gps;
+    }
 
     @Override
     public String toString() {
@@ -60,14 +68,14 @@ public class World {
         Player player1 = new Player("uno", null);
         Player player2 = new Player("dos", null);
         Player player3 = new Player("tres", null);
-        Province upperright = new Province("upperright", player2, 0);
-        Province upperleft = new Province("upperleft", player1, 1);
-        Province lowermiddle = new Province("lowermiddle", player3, 2);
-        Province middle = new Province("middle", player1, 3);
-        Province outsideright = new Province("outsideright", player1, 4);
-        Province outsideleft = new Province("outsideleft", player3, 5);
-        Province outsidedown = new Province("outsidedown", player3, 6);
-        Province outsidetop = new Province("outsidetop", player1, 7);
+        Province upperright = new Province("upperright");
+        Province upperleft = new Province("upperleft");
+        Province lowermiddle = new Province("lowermiddle");
+        Province middle = new Province("middle");
+        Province outsideright = new Province("outsideright");
+        Province outsideleft = new Province("outsideleft");
+        Province outsidedown = new Province("outsidedown");
+        Province outsidetop = new Province("outsidetop");
 
         upperright.setAdjacent(new HashSet<Province>(Arrays.asList(outsideright, middle)));
         upperleft.setAdjacent(new HashSet<Province>(Arrays.asList(outsideleft, middle)));

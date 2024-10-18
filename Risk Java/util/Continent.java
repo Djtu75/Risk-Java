@@ -80,14 +80,14 @@ public class Continent{
     }
 
     public static void main(String[] args) {
-        Province upperright = new Province("upperright", null, 0);
-        Province upperleft = new Province("upperleft",null, 1);
-        Province lowermiddle = new Province("lowermiddle",null, 2);
-        Province middle = new Province("middle",null, 3);
-        Province outsideright = new Province("outsideright",null, 4);
-        Province outsideleft = new Province("outsideleft",null, 5);
-        Province outsidedown = new Province("outsidedown",null, 6);
-        Province outsidetop = new Province("outsidetop",null, 7);
+        Province upperright = new Province("upperright");
+        Province upperleft = new Province("upperleft");
+        Province lowermiddle = new Province("lowermiddle");
+        Province middle = new Province("middle");
+        Province outsideright = new Province("outsideright");
+        Province outsideleft = new Province("outsideleft");
+        Province outsidedown = new Province("outsidedown");
+        Province outsidetop = new Province("outsidetop");
 
         upperright.setAdjacent(new HashSet<Province>(Arrays.asList(outsideright, middle)));
         upperleft.setAdjacent(new HashSet<Province>(Arrays.asList(outsideleft, middle)));

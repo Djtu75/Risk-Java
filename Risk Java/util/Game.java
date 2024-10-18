@@ -67,33 +67,7 @@ public class Game {
 
                 boolean phasefinished = false;
                 int currentPlayerIndex = 0;
-                boolean oldSchoolSetUp = false;
-                /*if(oldSchoolSetUp){
-                    //Initial land claiming for original setup |Unimplemented
-                    for(int i = 0; i < players.length; i++){
-                        Player activePlayer = players[i];
-                        int troopsToPlace = initialTroops/players.length;
-                        while(!phasefinished){
-                            Set<DeployCommand> action = activePlayer.getLogic().draftPhase(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn()), troopsToPlace);
-                            Object[] parameters = {activePlayer};
-                            if(actionIsValid("placeTroops", action, parameters)){
-                                for(DeployCommand dc : action){
-                                    int numTroopsPlaced = dc.getNumTroops();
-                                    Province destination = dc.getProvince();
-                                    troopsToPlace -= numTroopsPlaced;
-                                    destination.addSoldiers(numTroopsPlaced);
-                                }
-                                
-                            }
-                            else{
-                                phasefinished = true;
-                            }
-                            if(troopsToPlace == 0){
-                                phasefinished = true;
-                            }
-                        }
-                    }
-                }*/
+                
                 //If using standard quick start, distribute even amounts of land between players and add troops randomly to that land
                 for(int i = 0; i < players.length; i++){
                     Player activePlayer = players[i];
