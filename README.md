@@ -22,6 +22,13 @@ Card - an object representing the physical cards one would draw, these are drawn
 Participants should implement their player by inheriting from the PlayerLogic class. There are two example players already in the code, labeled ExamplePlayer1 and ExamplePlayer2.
 One is incredibly offensive and one is incredibly defensive, designed to showcase multiple ways to code your player.
 
+
+If you want to test your player, run "RunTestsOnPlayer.java" and read the comments there.
+
+
+OLD DESCRIPTION:
+
+
 Provinces are the atomic object that makes the risk board. These provinces are grouped in continents, and those continents comprise the board, otherwise known as the "world." There are also player and card objects to store data on each individual player and the cards they hold. Additionally, the game object contains the logic for each turn, game setup, and various other methods. Finally, the PlayerLogic class is intended to be the parent class for everyone who wants to participate in the competition. It implements the methods laid out in the Logic interface in a basic way. All participants should be able to override these methods with their own implementations, that then get called during runtime by the game object.
 
 Please leave feedback if you have any suggestions, bugfixes, or other ideas!
