@@ -35,7 +35,7 @@ public class Main {
             }
 
             if(playerLogics[i].getCustomColor() != null){
-                player.setColors(sl1.getCustomColor()[0], playerLogics[i].getCustomColor()[1]);
+                player.setColors(playerLogics[i].getCustomColor()[0], playerLogics[i].getCustomColor()[1]);
             }
             else{
                 Random rand = new Random();
