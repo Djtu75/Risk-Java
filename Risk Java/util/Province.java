@@ -8,8 +8,8 @@ public class Province{
     private String name;
     private Player owner;
     private int numsoldiers;
-    private Set<Province> adjacent = new HashSet<Province>();
-    private Continent continent;
+    private Set<Province> adjacent = new HashSet<Province>(); 
+    private Continent continent; 
 
     protected Province(String name){
         this.name = name;

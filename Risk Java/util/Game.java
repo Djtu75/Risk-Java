@@ -15,9 +15,9 @@ import java.util.logging.Level;
 public class Game {
     
     private boolean started = false;
-    public boolean gameOver = false;
+    public static boolean gameOver = false;
     private int turnNum = 0;
-    private Player[] players;
+    public static Player[] players;
     private World world;
     private Card[] deck;
     private int totalTrades = 0;
@@ -26,6 +26,7 @@ public class Game {
     private GraphicProvince[] gp = null;
     private static Random rand = new Random();
     protected GameLogger GL;
+    public static String[] names; 
 
     public Game(Player[] players, World world, GraphicProvince[] gps){
         this.players = players;
@@ -753,7 +754,7 @@ public class Game {
 
         loopnum = 0;
         Player[] testarray = new Player[]{player1, player2, player3, player4};
-        String[] names = new String[]{"uno","dos","tres","cuatro"};
+        names = new String[]{"uno","dos","tres","cuatro"};
         int[][] results = new int[4][4];
         while(loopnum < 1000000){
             randomOrder(testarray);

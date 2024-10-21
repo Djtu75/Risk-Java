@@ -12,8 +12,7 @@ import java.awt.Color;
 import util.*;
 
 public class Jakefrozen extends PlayerLogic { 
-    GameLogger GL; 
-    Game Check; 
+    GameLogger GL;  
     private int territories; 
     public Jakefrozen(){ 
         super(); 
@@ -31,10 +30,32 @@ public class Jakefrozen extends PlayerLogic {
     /**
      * @return //Method to tell player their turn is about to end. Intended to let player clean up variables and logic.
      */
-    public void endTurn(Snapshot s){
-        if(Check.gameOver == true) { 
-            
-        } 
+    public void endTurn(Snapshot s){ 
+        if(Game.gameOver == true) { 
+                if(Game.players[0].territory.size() > Game.players[1].territory.size()) { 
+                    if(Game.players[0].territory.size() > Game.players[2].territory.size()) { 
+                        if(Game.players[0].territory.size() > Game.players[3].territory.size()) { 
+                            Game.names[0] = "Jakefrozen"; 
+                        } else { 
+                            Game.names[3] = "Jakefrozen"; 
+                        } 
+                    } else if(Game.players[2].territory.size() > Game.players[3].territory.size()) { 
+                        Game.names[2] = "Jakefrozen"; 
+                    } else { 
+                        Game.names[3] = "Jakefrozen"; 
+                    } 
+                } else if(Game.players[1].territory.size() > Game.players[2].territory.size()) { 
+                    if(Game.players[1].territory.size() > Game.players[3].territory.size()) { 
+                        Game.names[1] = "Jakefrozen"; 
+                    } else { 
+                        Game.names[3] = "Jakefrozen"; 
+                    } 
+                } else if(Game.players[2].territory.size() > Game.players[3].territory.size()) { 
+                    Game.names[2] = "Jakefrozen"; 
+                } else { 
+                    Game.names[3] = "Jakefrozen"; 
+                } 
+        } else {} 
     }
 
     /**
@@ -43,24 +64,22 @@ public class Jakefrozen extends PlayerLogic {
     public Set<DeployCommand> draftPhase(Snapshot s, int numTroopstoPlace){ 
         if(territories > 9){ 
             numTroopstoPlace = territories/3; 
-        } 
+        } else { numTroopstoPlace = 3; } 
         GL = GameLogger.getGameLogger(); 
         Set<DeployCommand> returnSet = new HashSet<DeployCommand>(); 
         while(numTroopstoPlace > 0){ 
             for(Province p: s.getMyPlayer().getTerritory()){ 
-                if(numTroopstoPlace > 0 && isAdjacentToEnemy(s, p)){
-                    Province destination = p;
+                if(numTroopstoPlace > 0 && isAdjacentToEnemy(s, p)){ 
+                    Province destination = p; 
                     int placeXTroops = 1; 
                     DeployCommand command = new DeployCommand(placeXTroops, destination); 
                     numTroopstoPlace--; 
                     returnSet.add(command); 
-                }
-            
-            }
-        }
-        
-        return(returnSet);
-    }
+                } 
+            } 
+        } 
+        return(returnSet); 
+    } 
 
     /**
      * @return //Asks player to perform attack. Should return [int numTroopstoUse, Province attackingProvince, Province defendingProvince]

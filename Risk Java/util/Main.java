@@ -14,20 +14,15 @@ public class Main {
     public static void main(String[] args){
         System.out.println("test");
 
-        ExamplePlayer1 sl1 = new ExamplePlayer1(); 
-        ExamplePlayer1 sl2 = new ExamplePlayer1();
-        //ExamplePlayer1 sl3 = new ExamplePlayer1();
-        //ExamplePlayer1 sl4 = new ExamplePlayer1();
-
-        //ExamplePlayer2 sl1 = new ExamplePlayer2();
-        //ExamplePlayer2 sl2 = new ExamplePlayer2();
-        Jakefrozen sl3 = new Jakefrozen();
+        ExamplePlayer1 sl1 = new ExamplePlayer1();  
+        ExamplePlayer1 sl2 = new ExamplePlayer1(); 
+        Jakefrozen sl3 = new Jakefrozen(); 
         PlayerLogic sl4 = new PlayerLogic(); 
 
-        PlayerLogic[] playerLogics = {sl1, sl2, sl3, sl4};
+        PlayerLogic[] playerLogics = {sl1, sl2, sl3, sl4}; 
         Color[] defaultColors = {Color.BLACK, Color.BLUE, Color.CYAN, Color.GREEN, Color.LIGHT_GRAY, Color.MAGENTA, Color.ORANGE, Color.RED, Color.YELLOW, Color.PINK};
-        Player[] players = new Player[playerLogics.length];
-        for(int i = 0; i < playerLogics.length; i++){
+        Player[] players = new Player[playerLogics.length]; 
+        for(int i = 0; i < playerLogics.length; i++){ 
 
             Player player = new Player(Integer.toString(i+1), playerLogics[i]);
             if(playerLogics[i].getCustomName() != null){
