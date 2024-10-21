@@ -446,7 +446,7 @@ public class Game {
                 
             }
             if(controlled){
-                System.out.println("Got continent bonus:" + c.getName() + c.getBonus());
+                //System.out.println("Got continent bonus:" + c.getName() + c.getBonus());
                 allotedTroops += c.getBonus();
             }
         }
@@ -498,8 +498,12 @@ public class Game {
         if(offendingTroops > 3){
             offendingTroops = 3;
         }
+        if(offendingTroops <= 0 || defendingTroops <= 0){
+            wait(20000);
+        }
         for(int i = 0; i < defendingTroops; i++){ //Rolls dice
             defenders[i] = rand.nextInt(6)+1;
+            //System.out.println(defenders[i]); //Prints roll results
         }
         sort(defenders);
         for(int i = 0; i < offendingTroops; i++){ //Rolls dice
@@ -507,7 +511,14 @@ public class Game {
         }
         sort(offenders);
 
+        for(int i = 0; i < defendingTroops; i++){ //Rolls dice
+            if(offenders[i] > defenders[i]){
                 result[0] += 1;
+            }
+            else{
+                result[1] += 1;
+            }
+        }
                 
         //System.out.println("(" + defenders[0] +", " + defenders[1] + ")"); //Prints roll results
         //System.out.println("(" + offenders[0] +", " + offenders[1] + ", " + offenders[2] + ")"); //Prints roll results
