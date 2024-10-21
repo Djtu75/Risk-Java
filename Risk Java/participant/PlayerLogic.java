@@ -51,10 +51,10 @@ public class PlayerLogic implements Logic {
     /**
      * @return //Asks player to move troops. Should return [int numTroopstoMove, Province source, Province destination]
      */
-    public MoveCommand movePhase(Snapshot s){
-        int moveXTroops = 1;
+    public MoveCommand movePhase(Snapshot s){ 
+        int moveXTroops = 1; 
         Province source = null;
-        Province destination = null;
+        Province destination = null; 
         MoveCommand command = new MoveCommand(moveXTroops, destination, source);
         return (command);
     }
@@ -111,7 +111,7 @@ public class PlayerLogic implements Logic {
      * 
      */
     public Color[] getCustomColor(){
-        Color[] colors = {new Color(255,255,255), new Color(255,255,255)};
+        Color[] colors = {new Color(255,255,255), new Color(255,255,255)}; 
         //Return null if you want to be assigned a random color.
         return null;
     }

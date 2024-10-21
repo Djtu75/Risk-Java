@@ -5,14 +5,14 @@ import java.awt.Color;
 
 import participant.DummyPlayer;
 import participant.ExamplePlayer1;
-import participant.ExamplePlayer2;
+import participant.Jakefrozen;
 import participant.PlayerLogic;
 
 public class RunTestsOnPlayer {
 
     public static void main(String[] args){
     //INSERT PLAYER TO BE TESTED HERE VVV
-    ExamplePlayer2 sl1 = new ExamplePlayer2();
+    Jakefrozen sl1 = new Jakefrozen();
     //INSERT PLAYER TO BE TESTED HERE ^^^
 
 

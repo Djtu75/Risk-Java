@@ -1,5 +1,6 @@
 package participant;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -10,40 +11,49 @@ import java.awt.Color;
 
 import util.*;
 
-public class ExamplePlayer2 extends PlayerLogic {
-    GameLogger GL;
-    public ExamplePlayer2(){
-        super();
+public class Jakefrozen extends PlayerLogic { 
+    GameLogger GL; 
+    Game Check; 
+    private int territories; 
+    public Jakefrozen(){ 
+        super(); 
     }
 
     /**
      * @return Method to tell player their turn is about to start. Intended to let player initialize variables and logic.
      */
     public void beginTurn(Snapshot s){
-        //Do setup logic
+        for(Province p: s.getMyPlayer().getTerritory()){ 
+            territories += 1; 
+        } 
     }
 
     /**
      * @return //Method to tell player their turn is about to end. Intended to let player clean up variables and logic.
      */
     public void endTurn(Snapshot s){
-        //Do ending logic
+        if(Check.gameOver == true) { 
+            
+        } 
     }
 
     /**
      * @return //Asks player to place troops. Should return [int numTroopstoPlace, Province destination]
      */
-    public Set<DeployCommand> draftPhase(Snapshot s, int numTroopstoPlace){
-        GL = GameLogger.getGameLogger();
-        Set<DeployCommand> returnSet = new HashSet<DeployCommand>();
-        while(numTroopstoPlace > 0){
-            for(Province p: s.getMyPlayer().getTerritory()){
+    public Set<DeployCommand> draftPhase(Snapshot s, int numTroopstoPlace){ 
+        if(territories > 9){ 
+            numTroopstoPlace = territories/3; 
+        } 
+        GL = GameLogger.getGameLogger(); 
+        Set<DeployCommand> returnSet = new HashSet<DeployCommand>(); 
+        while(numTroopstoPlace > 0){ 
+            for(Province p: s.getMyPlayer().getTerritory()){ 
                 if(numTroopstoPlace > 0 && isAdjacentToEnemy(s, p)){
                     Province destination = p;
-                    int placeXTroops = 1;
-                    DeployCommand command = new DeployCommand(placeXTroops, destination);
-                    numTroopstoPlace--;
-                    returnSet.add(command);
+                    int placeXTroops = 1; 
+                    DeployCommand command = new DeployCommand(placeXTroops, destination); 
+                    numTroopstoPlace--; 
+                    returnSet.add(command); 
                 }
             
             }
@@ -123,15 +133,15 @@ public class ExamplePlayer2 extends PlayerLogic {
      * @return //Asks player to turn in set of cards. If required, must be [Card X, Card Y, Card Z]. If not required, any invalid input will count as passing on your turn.
      */
     public Set<Card> turnInCards(Snapshot s, boolean required, int currentTroops){
-        if(required){
+        if(required){ 
             Set<Card> mycards = s.getUserHand();
             //Some Logic to pick which 3 to turn in
             Set<Card> returnSet = makeSet(mycards);
             return (returnSet);
-        }
-        else{
-            return (new HashSet<Card>(Arrays.asList()));
-        }
+        } 
+        else{ 
+            return (new HashSet<Card>(Arrays.asList())); 
+        } 
 
     }
 
@@ -207,15 +217,15 @@ public class ExamplePlayer2 extends PlayerLogic {
     }
 
     public String getCustomName(){
-        return null;
+        return "Jakefrozen"; 
     }
 
-    public Color[] getCustomColor(){
+    public Color[] getCustomColor(){ 
         return null;
     }
 
     public String getCustomProfile(){
-        return null;
+        return null; 
     }
     
 }

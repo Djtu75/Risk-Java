@@ -7,7 +7,7 @@ import participant.PlayerLogic;
 
 public class Player {
 
-    private Set<Province> territory = new HashSet<Province>();
+    public Set<Province> territory = new HashSet<Province>();
     private int numsoldiers;
     private Set<Card> cards = new HashSet<Card>();
     private PlayerLogic logic;

@@ -6,7 +6,7 @@ import java.util.Random;
 import java.util.Set;
 
 import participant.ExamplePlayer1;
-import participant.ExamplePlayer2;
+import participant.Jakefrozen;
 import participant.OldExamplePlayer;
 import participant.PlayerLogic;
 public class Main {
@@ -14,15 +14,15 @@ public class Main {
     public static void main(String[] args){
         System.out.println("test");
 
-        ExamplePlayer1 sl1 = new ExamplePlayer1();
+        ExamplePlayer1 sl1 = new ExamplePlayer1(); 
         ExamplePlayer1 sl2 = new ExamplePlayer1();
         //ExamplePlayer1 sl3 = new ExamplePlayer1();
         //ExamplePlayer1 sl4 = new ExamplePlayer1();
 
         //ExamplePlayer2 sl1 = new ExamplePlayer2();
         //ExamplePlayer2 sl2 = new ExamplePlayer2();
-        ExamplePlayer2 sl3 = new ExamplePlayer2();
-        ExamplePlayer2 sl4 = new ExamplePlayer2();
+        Jakefrozen sl3 = new Jakefrozen();
+        PlayerLogic sl4 = new PlayerLogic(); 
 
         PlayerLogic[] playerLogics = {sl1, sl2, sl3, sl4};
         Color[] defaultColors = {Color.BLACK, Color.BLUE, Color.CYAN, Color.GREEN, Color.LIGHT_GRAY, Color.MAGENTA, Color.ORANGE, Color.RED, Color.YELLOW, Color.PINK};

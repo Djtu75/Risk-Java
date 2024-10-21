@@ -15,7 +15,7 @@ import java.util.logging.Level;
 public class Game {
     
     private boolean started = false;
-    private boolean gameOver = false;
+    public boolean gameOver = false;
     private int turnNum = 0;
     private Player[] players;
     private World world;
