@@ -434,11 +434,19 @@ public class Game {
             boolean controlled = true;
             Set<Province> provs = c.getProvinces();
             for(Province p: provs){
-                if(!(territory.contains(p))){
+                boolean ownsprovince = false;
+                for(Province pc: territory){
+                    if(p.equals(pc)){
+                        ownsprovince = true;
+                    }
+                }
+                if(!(ownsprovince)){
                     controlled = false;
                 }
+                
             }
             if(controlled){
+                System.out.println("Got continent bonus:" + c.getName() + c.getBonus());
                 allotedTroops += c.getBonus();
             }
         }
