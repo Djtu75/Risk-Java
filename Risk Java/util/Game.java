@@ -223,7 +223,7 @@ public class Game {
                                             GL.LogMessage(attackingProvince.getOwner().getName()+ " has moved "+ troopsToMove + " into "+ defendingProvince.getName());
                                         }
                                         else{ //If invalid input, move minimum number of troops
-                                            int troopsToMove = attackingTroops;
+                                            int troopsToMove = attackingTroops - result[1];
                                             attackingProvince.addSoldiers(troopsToMove*-1);
                                             defendingProvince.addSoldiers(troopsToMove);
                                         }
@@ -566,7 +566,7 @@ public class Game {
                     GL.LogMessage("ATTACK is null. Ending the attack phase");
                     return false;
                 }
-                if(attackingProvince.getOwner() == activePlayer && defendingProvince.getOwner() != activePlayer && attackingTroops < attackingProvince.getNumSoldiers()){
+                if(attackingProvince.getOwner() == activePlayer && defendingProvince.getOwner() != activePlayer && attackingTroops > 0 && attackingTroops <= (attackingProvince.getNumSoldiers()-1)){
                     return true;
                 }
 
