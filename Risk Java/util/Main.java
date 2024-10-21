@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import participant.ExamplePlayer1;
+import participant.*;
 import participant.ExamplePlayer2;
 import participant.OldExamplePlayer;
 import participant.PlayerLogic;
@@ -34,7 +34,7 @@ public class Main {
                 player = new Player(playerLogics[i].getCustomName(), playerLogics[i]);
             }
 
-            if(playerLogics[i].getCustomColor() != null){
+            if(playerLogics[i].getCustomColor() != null && playerLogics[i].getCustomColor()[0] != null && playerLogics[i].getCustomColor()[1] != null){
                 player.setColors(playerLogics[i].getCustomColor()[0], playerLogics[i].getCustomColor()[1]);
             }
             else{

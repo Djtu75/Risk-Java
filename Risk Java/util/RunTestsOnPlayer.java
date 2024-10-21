@@ -3,7 +3,7 @@ package util;
 import java.util.Random;
 import java.awt.Color;
 
-import participant.DummyPlayer;
+import participant.*;
 import participant.ExamplePlayer1;
 import participant.ExamplePlayer2;
 import participant.PlayerLogic;
