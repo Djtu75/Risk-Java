@@ -74,12 +74,12 @@ public class Main {
                         Color c1 = null;
                         Color c2 = null;
                         int a = 0;
-                        while(c1 != null){
+                        while(c1 == null){
                             a = rand.nextInt(defaultColors.length);
                             c1 = defaultColors[a];
                         }
                         defaultColors[a] = null;
-                        while(c2 != null){
+                        while(c2 == null){
                             a = rand.nextInt(defaultColors.length);
                             c2 = defaultColors[a];
                         }
