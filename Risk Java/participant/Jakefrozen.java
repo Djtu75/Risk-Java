@@ -152,15 +152,15 @@ public class Jakefrozen extends PlayerLogic {
      * @return //Asks player to turn in set of cards. If required, must be [Card X, Card Y, Card Z]. If not required, any invalid input will count as passing on your turn.
      */
     public Set<Card> turnInCards(Snapshot s, boolean required, int currentTroops){
-        if(required){ 
+        if(required){
             Set<Card> mycards = s.getUserHand();
             //Some Logic to pick which 3 to turn in
             Set<Card> returnSet = makeSet(mycards);
             return (returnSet);
-        } 
-        else{ 
-            return (new HashSet<Card>(Arrays.asList())); 
-        } 
+        }
+        else{
+            return (new HashSet<Card>(Arrays.asList()));
+        }
 
     }
 
@@ -235,16 +235,16 @@ public class Jakefrozen extends PlayerLogic {
         return bordersEnemy;
     }
 
-    public String getCustomName(){
+    public String getCustomName(){ 
         return "Jakefrozen"; 
     }
 
-    public Color[] getCustomColor(){ 
+    public Color[] getCustomColor(){
         return null;
     }
 
     public String getCustomProfile(){
-        return null; 
+        return null;
     }
     
 }
