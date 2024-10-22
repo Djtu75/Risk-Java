@@ -34,9 +34,7 @@ public class ZacharyLogic extends PlayerLogic {
         Province one = null;
         Province two = null;
         Province three = null;
-        System.out.println("a");
         for (Province owned : myplayer.getTerritory()) {
-            System.out.println("b");
             if (three == null || owned.getNumSoldiers() > three.getNumSoldiers()) {
                 three = owned;
                 if (two == null || owned.getNumSoldiers() > two.getNumSoldiers()) {
@@ -48,7 +46,6 @@ public class ZacharyLogic extends PlayerLogic {
                     }
                 }
             }
-            System.out.println("c");
         }
         if (one != null)
             big3.add(one);
@@ -75,7 +72,6 @@ public class ZacharyLogic extends PlayerLogic {
      *         Province destination]
      */
     public Set<DeployCommand> draftPhase(Snapshot s, int numTroopstoPlace) {
-        System.out.println("d");
         myplayer = s.getMyPlayer();
         Set<DeployCommand> returnArray = new HashSet<DeployCommand>();
         Set<Province> myterritory = myplayer.getTerritory();
@@ -109,7 +105,7 @@ public class ZacharyLogic extends PlayerLogic {
             } else if (smallBig == null) {
                 returnArray.add(new DeployCommand(mexicans[itt], big));
                 itt++;
-                System.out.println(myplayer.getName() + " placed 1 troop in " + big.getName());
+                //System.out.println(myplayer.getName() + " placed 1 troop in " + big.getName());
             }
         }
         return returnArray;
@@ -175,7 +171,7 @@ public class ZacharyLogic extends PlayerLogic {
                             }
                         }
                         if (small > smallMax) {
-                            System.out.println("smallMax Works " + smallMax);
+                            //System.out.println("smallMax Works " + smallMax);
                             smallMax = small;
                             attackingProvince = big;
                             defendingProvince = border;
@@ -190,7 +186,7 @@ public class ZacharyLogic extends PlayerLogic {
                             }
                         }
                         if (small > bSmallMax) {
-                            System.out.println("bsmallMax Works " + bSmallMax);
+                            //System.out.println("bsmallMax Works " + bSmallMax);
                             bSmallMax = small;
                             bAttackingProvince = big;
                             bDefendingProvince = border;
@@ -238,10 +234,13 @@ public class ZacharyLogic extends PlayerLogic {
                                 useXtroops = big.getNumSoldiers() - 1;
                                 attackingProvince = big;
                                 egg = path.toArray();
-                                defendingProvince = (Province) egg[0];
-                                AttackCommand command = new AttackCommand(useXtroops, attackingProvince,
-                                        defendingProvince);
-                                return (command);
+                                if(egg.length > 0){
+                                    defendingProvince = (Province) egg[0];
+                                    AttackCommand command = new AttackCommand(useXtroops, attackingProvince,
+                                            defendingProvince);
+                                    return (command);
+                                }
+                                
                             }
                         }
                     }

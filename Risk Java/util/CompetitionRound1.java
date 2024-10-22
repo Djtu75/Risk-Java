@@ -18,7 +18,7 @@ import participant.Entries.ZacharyLogic;
 public class CompetitionRound1 {
 
     public static void main(String[] args){
-        System.out.println("test");
+        //System.out.println("test");
 
         PlayerLogic[] competitors = {new CooperPlayer(), new Genny(), new GoalPlayer(), 
         new Jakefrozen(), new MatthewS(), new MyIllogic(), new MyPlayer(), new Zach_Player(), new ZacharyLogic()};
@@ -41,18 +41,18 @@ public class CompetitionRound1 {
                 }
             }
         }
-        for(PlayerLogic pl: group1){
-            System.out.println(pl);
-        }
-        for(PlayerLogic pl: group2){
-            System.out.println(pl);
-        }
         
-        runGame(group1, 100);
-        runGame(group2, 100);
+        Player[] placement1 = runGame(group1, 100);
+        Player[] placement2 = runGame(group2, 100);
+        for(int i = 0; i < placement1.length; i++){
+            System.out.println((i + 1) + " place: " + placement1[i].getName());
+        }
+        for(int i = 0; i < placement2.length; i++){
+            System.out.println((i + 1) + " place: " + placement2[i].getName());
+        }
     }
 
-    public static void runGame(PlayerLogic[] playerLogics, int startingtroops){
+    public static Player[] runGame(PlayerLogic[] playerLogics, int startingtroops){
         Color[] defaultColors = {Color.BLACK, Color.BLUE, Color.CYAN, Color.GREEN, Color.LIGHT_GRAY, Color.MAGENTA, Color.ORANGE, Color.RED, Color.YELLOW, Color.PINK};
         Player[] players = new Player[playerLogics.length];
         for(int i = 0; i < playerLogics.length; i++){
@@ -126,8 +126,9 @@ public class CompetitionRound1 {
 
         RenderEarth test = new RenderEarth(world.getGraphicProvinces(), backgroundImages, players, game);
 
-        String result = game.startGame(startingtroops, test);
-        System.out.println("Result: " + result);
+        Player[] result = game.startGame(startingtroops, test);
+        
+        return result;
     }
 
     public static PlayerLogic[] chooseCompetitors(PlayerLogic[] options, int numplayers){

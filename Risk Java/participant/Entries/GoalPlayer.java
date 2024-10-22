@@ -736,7 +736,9 @@ public class GoalPlayer extends PlayerLogic {
         Set<Card> returnSet = new HashSet<Card>();
 
         for(Card c : set){
-            types[c.getType()]++;
+            if(c != null){
+                types[c.getType()] ++;
+            }
         }
         int setType = 3;
         for(int i = 0; i < types.length; i++){
@@ -749,7 +751,7 @@ public class GoalPlayer extends PlayerLogic {
                 int[] needed = {0, 0, 0}; //0 = not found, 1 = found
                 for(Card c : set){
                     for(int i = 0; i < needed.length; i++){
-                        if(needed[i] == 0 && c.getType() == i){
+                        if(needed[i] == 0 && c != null && c.getType() == i){
                             returnSet.add(c);
                             needed[i] = 1;
                         }

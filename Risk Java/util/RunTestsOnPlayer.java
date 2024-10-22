@@ -46,7 +46,7 @@ public class RunTestsOnPlayer {
 
         RenderEarth test = new RenderEarth(world.getGraphicProvinces(), backgroundImages, players, game);
 
-        String result = game.startGame(1, test);
+        Player[] result = game.startGame(1, test);
         System.out.println("Result: " + result);
     }
 
@@ -62,7 +62,7 @@ public class RunTestsOnPlayer {
 
         RenderEarth test = new RenderEarth(world.getGraphicProvinces(), backgroundImages, players, game);
 
-        String result = game.startGame(1, test);
+        Player[] result = game.startGame(1, test);
         System.out.println("Result: " + result);
     }
 
@@ -78,7 +78,7 @@ public class RunTestsOnPlayer {
 
         RenderEarth test = new RenderEarth(world.getGraphicProvinces(), backgroundImages, players, game);
 
-        String result = game.startGame(1, test);
+        Player[] result = game.startGame(1, test);
         System.out.println("Result: " + result);
     }
 
@@ -94,7 +94,7 @@ public class RunTestsOnPlayer {
 
         RenderEarth test = new RenderEarth(world.getGraphicProvinces(), backgroundImages, players, game);
 
-        String result = game.startGame(1, test);
+        Player[] result = game.startGame(1, test);
         System.out.println("Result: " + result);
     }
     

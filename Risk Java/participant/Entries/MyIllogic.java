@@ -28,8 +28,8 @@ public class MyIllogic extends PlayerLogic {
     //place based on current percent differences, as a percent of total
     //TODO: now every so often we get stuck
     public Set<DeployCommand> draftPhase(Snapshot s, int numTroopstoPlace){
-        GL = GameLogger.getGameLogger();
-        GL.LogMessage("num troops to place: " + numTroopstoPlace);
+        //GL = GameLogger.getGameLogger();
+        //GL.LogMessage("num troops to place: " + numTroopstoPlace);
         Set<DeployCommand> returnArray = new HashSet<DeployCommand>();
         Set<Province> myterritory = s.getMyPlayer().getTerritory();
         if(myterritory.size() <= 0){
@@ -100,7 +100,7 @@ public class MyIllogic extends PlayerLogic {
             troopsPlaced--;
         }
 
-        GL.LogMessage(("Has "+ borders.size() +" border territories and "+ neighbors.size() +" neighboring territories").toString());
+        //GL.LogMessage(("Has "+ borders.size() +" border territories and "+ neighbors.size() +" neighboring territories").toString());
 
         return(returnArray);
     }

@@ -304,10 +304,10 @@ public class Zach_Player extends PlayerLogic {
      * @return //Asks player to perform attack. Should return [int numTroopstoUse, Province attackingProvince, Province defendingProvince]
      */
     public AttackCommand attackPhase(Snapshot s){
-        System.out.println(aggro);
+        //System.out.println(aggro);
         if (nextAttack != null) {
-            System.out.println(nextAttack.getAttackingProvince().getName());
-            System.out.println(nextAttack.getDefendingProvince().getName());   
+            //System.out.println(nextAttack.getAttackingProvince().getName());
+            //System.out.println(nextAttack.getDefendingProvince().getName());   
             return nextAttack;
         }
         return null;
@@ -427,7 +427,10 @@ public class Zach_Player extends PlayerLogic {
 
         for(Card card : myCards)
         {
-            types[card.getType()] ++;
+            if(card != null){
+                types[card.getType()] ++;
+            }
+            
         }
 
         // -1 = invalid, 0 = infantry, 1 = cavalry, 2 = artillery, 3 = one of each, 4 = infantry w/ wild, 5 = cavalry w/ wild, 6 = artillery w/ wild, 7 = one of each w/ wild
@@ -491,7 +494,11 @@ public class Zach_Player extends PlayerLogic {
         while( ( types[0] > 0 || types[1] > 0 || types[2] > 0 ) && iter.hasNext() )
         {
             Card currCard = iter.next();
-            int cardType = currCard.getType();
+            int cardType = 0;
+            if(currCard != null){
+                cardType = currCard.getType();
+            }
+            
             if(cardType == 3)
             {
                 wilds.add(currCard);

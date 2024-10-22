@@ -25,7 +25,7 @@ public class Game {
     private RenderEarth display = null;
     private GraphicProvince[] gp = null;
     private static Random rand = new Random();
-    protected GameLogger GL;
+    //protected GameLogger GL;
 
     public Game(Player[] players, World world, GraphicProvince[] gps){
         this.players = players;
@@ -53,10 +53,12 @@ public class Game {
         return record;
     }
 
-    protected String startGame(int initialTroops, RenderEarth re){
-        GL = GameLogger.getGameLogger();
-        GL.LogMessage(new LogRecord(Level.INFO, "START OF GAME LOOP "));
+    protected Player[] startGame(int initialTroops, RenderEarth re){
+        //GL = GameLogger.getGameLogger();
+        //GL.LogMessage(new LogRecord(Level.INFO, "START OF GAME LOOP "));
         display = re;
+        Player[] resultsofGame = new Player[players.length];
+        int numEliminated = 0;
         if(!started){
             started = true;
             if (this.validityCheck()){ //Check that world and players are useable
@@ -71,7 +73,7 @@ public class Game {
                 //If using standard quick start, distribute even amounts of land between players and add troops randomly to that land
                 for(int i = 0; i < players.length; i++){
                     Player activePlayer = players[i];
-                    GL.LogMessage((String)("Initializing " + activePlayer.getName()));
+                    //GL.LogMessage((String)("Initializing " + activePlayer.getName()));
                     int troopsToPlace = initialTroops/players.length;
                     for(Province prov: activePlayer.getTerritory()){
                         troopsToPlace--;
@@ -92,7 +94,7 @@ public class Game {
                 wait(70);
                 while(!gameOver){ //Main game loop |Needs mechanism to ignore/eliminate players who have lost all territory
                     //String s = scnr.next();
-                    GL.LogMessage(new LogRecord(Level.INFO, "IT IS TURN NUMBER: "+ turnNum));
+                    //GL.LogMessage(new LogRecord(Level.INFO, "IT IS TURN NUMBER: "+ turnNum));
                     turnNum++;
                     
                     //Normal turn
@@ -101,7 +103,7 @@ public class Game {
                         Player activePlayer = players[i];
                         if(activePlayer.getTerritory().size() > 0 && !gameOver){
                             activePlayer.getLogic().beginTurn(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn())); //Tell player their turn is starting
-                            GL.LogMessage(("Beginning " + activePlayer.getName()+" ------------------------------------------------------------------------------------------------------------------------------------"));
+                            //GL.LogMessage(("Beginning " + activePlayer.getName()+" ------------------------------------------------------------------------------------------------------------------------------------"));
                             int cardBonus = 0;
                             //Handle cards
                             int troopsToPlace = calcTroopAllot(activePlayer); //Calc troops player should get to place
@@ -110,6 +112,12 @@ public class Game {
                                 Object[] parameters = {activePlayer};
                                 if(actionIsValid("turnInCards", cardsToTurnIn, parameters)){
                                     //Set<Card> cardsToTurnIn = new HashSet<Card>(Arrays.asList((Card)action[0], (Card)action[1], (Card)action[2]));
+                                    Set<Card> tempCards = activePlayer.getCards();
+                                    for(Card c: cardsToTurnIn){
+                                        tempCards.remove(c);
+                                    }
+                                    //tempCards.removeAll(cardsToTurnIn);
+                                    activePlayer.setCards(tempCards);
                                     for(Card c: cardsToTurnIn){ //Returns cards to deck and applies +2 troops if owned by activeplayer
                                         Province cardProv = c.getProvince();
                                         for(Province p : activePlayer.getTerritory()){
@@ -117,23 +125,17 @@ public class Game {
                                                 p.addSoldiers(2);
                                             }
                                         }
-                                        returnCard(c);
+                                        //returnCard(c);
                                     }
                                     totalTrades++;
                                     cardBonus = calcCardTurnIn();
-                                    Set<Card> tempCards = activePlayer.getCards();
-                                    for(Card c: cardsToTurnIn){
-                                        tempCards.remove(c);
-                                    }
-                                    //tempCards.removeAll(cardsToTurnIn);
-                                    activePlayer.setCards(tempCards);
-                                    GL.LogMessage(new LogRecord(Level.INFO, activePlayer.getName()+" turned in cards and got "+ cardBonus+ " more troops!"));
+                                    //GL.LogMessage(new LogRecord(Level.INFO, activePlayer.getName()+" turned in cards and got "+ cardBonus+ " more troops!"));
                                 }
                                 else{ //If player attempts to turn in invalid set, clear player's hand
-                                    GL.LogMessage(new LogRecord(Level.SEVERE, activePlayer.getName()+" tried to turn in invalid hand & their hand was cleared!"));
+                                    //GL.LogMessage(new LogRecord(Level.SEVERE, activePlayer.getName()+" tried to turn in invalid hand & their hand was cleared!"));
                                     Set<Card> tempCards = activePlayer.getCards();
                                     for(Card c: tempCards){
-                                        returnCard(c);
+                                        //returnCard(c);
                                     }
                                     tempCards.clear();
                                     activePlayer.setCards(tempCards);
@@ -145,6 +147,12 @@ public class Game {
                                     Object[] parameters = {activePlayer};
                                     if(actionIsValid("turnInCards", cardsToTurnIn, parameters)){
                                         //Set<Card> cardsToTurnIn = new HashSet<Card>(Arrays.asList((Card)action[0], (Card)action[1], (Card)action[2]));
+                                        Set<Card> tempCards = activePlayer.getCards();
+                                        for(Card c: cardsToTurnIn){
+                                            tempCards.remove(c);
+                                        }
+                                        //tempCards.removeAll(cardsToTurnIn);
+                                        activePlayer.setCards(tempCards);
                                         for(Card c: cardsToTurnIn){ //Returns cards to deck and applies +2 troops if owned by activeplayer
                                             Province cardProv = c.getProvince();
                                             for(Province p : activePlayer.getTerritory()){
@@ -152,16 +160,10 @@ public class Game {
                                                     p.addSoldiers(2);
                                                 }
                                             }
-                                            returnCard(c);
+                                            //returnCard(c);
                                         }
                                         totalTrades++;
                                         cardBonus = calcCardTurnIn();
-                                        Set<Card> tempCards = activePlayer.getCards();
-                                        for(Card c: cardsToTurnIn){
-                                            tempCards.remove(c);
-                                        }
-                                        //tempCards.removeAll(cardsToTurnIn);
-                                        activePlayer.setCards(tempCards);
                                     }
                                 }
                             }
@@ -181,7 +183,7 @@ public class Game {
                                         troopsToPlace -= numTroopsPlaced;
                                         destination.addSoldiers(numTroopsPlaced);
                                         activePlayer.setNumsoldiers(activePlayer.getNumSoldiers() + numTroopsPlaced);
-                                        GL.LogMessage("Placed "+ numTroopsPlaced + " in "+ destination.getName());
+                                        //GL.LogMessage("Placed "+ numTroopsPlaced + " in "+ destination.getName());
                                     }
                                 }
                                 else{
@@ -207,20 +209,42 @@ public class Game {
                                     attackingProvince.getOwner().setNumsoldiers(attackingProvince.getOwner().getNumSoldiers() + result[1]*-1);
                                     defendingProvince.addSoldiers(result[0]*-1); //remove killed soldiers
                                     defendingProvince.getOwner().setNumsoldiers(defendingProvince.getOwner().getNumSoldiers() + result[0]*-1);
-                                    GL.LogMessage(activePlayer.getName()+ " is attacking "+ defendingProvince.getName()+" troops:"+String.valueOf(defendingProvince.getNumSoldiers())+ " from "+ attackingProvince.getName()+ " troops:" + String.valueOf(attackingProvince.getNumSoldiers()));
-                                    GL.LogMessage("Attackers killed: " + (Integer.valueOf(result[1])).toString() + " Defenders killed: " + (Integer.valueOf(result[0])).toString());
+                                    //GL.LogMessage(activePlayer.getName()+ " is attacking "+ defendingProvince.getName()+" troops:"+String.valueOf(defendingProvince.getNumSoldiers())+ " from "+ attackingProvince.getName()+ " troops:" + String.valueOf(attackingProvince.getNumSoldiers()));
+                                    //GL.LogMessage("Attackers killed: " + (Integer.valueOf(result[1])).toString() + " Defenders killed: " + (Integer.valueOf(result[0])).toString());
                                     activePlayer.getLogic().attackPhaseResults(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn()), result);
                                     if(defendingProvince.getNumSoldiers() == 0){ //If no troops left in defending province, that province is conquered
                                         gainCard = true;
+                                        Player previousOwner = defendingProvince.getOwner();
                                         activePlayer.addTerritory(defendingProvince);
                                         int followUpAction = activePlayer.getLogic().moveAfterConquer(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn()), attackingProvince, defendingProvince);
                                         Object[] parameters2 = {attackingTroops, attackingProvince};
-                                        GL.LogMessage(defendingProvince.getName()+ " has been captured by "+attackingProvince.getOwner().getName());
+                                        if(previousOwner.getTerritory().size() <= 0){
+                                            HashSet<Card> newset = new HashSet<Card>();
+                                            if(activePlayer.getCards() != null){
+                                                for(Card c: activePlayer.getCards()){
+                                                    if(c != null){
+                                                        newset.add(c);
+                                                    }
+                                                }
+                                            }
+                                            if(defendingProvince.getOwner().getCards() != null){
+                                                for(Card c: defendingProvince.getOwner().getCards()){
+                                                    newset.add(c);
+                                                }
+                                            }
+                                            
+                                            activePlayer.setCards(newset);
+                                            defendingProvince.getOwner().setCards(null);
+                                            resultsofGame[resultsofGame.length-(numEliminated+1)] = previousOwner;
+                                            System.out.println(activePlayer.getName() + " eliminated " + previousOwner.getName() + "!");
+                                            numEliminated++;
+                                        }
+                                        //GL.LogMessage(defendingProvince.getName()+ " has been captured by "+attackingProvince.getOwner().getName());
                                         if(actionIsValid("moveAfterConquer", followUpAction, parameters2)){
                                             int troopsToMove = followUpAction;
                                             attackingProvince.addSoldiers(troopsToMove*-1);
                                             defendingProvince.addSoldiers(troopsToMove);
-                                            GL.LogMessage(attackingProvince.getOwner().getName()+ " has moved "+ troopsToMove + " into "+ defendingProvince.getName());
+                                            //GL.LogMessage(attackingProvince.getOwner().getName()+ " has moved "+ troopsToMove + " into "+ defendingProvince.getName());
                                         }
                                         else{ //If invalid input, move minimum number of troops
                                             if(attackingTroops > 3){
@@ -230,6 +254,7 @@ public class Game {
                                             attackingProvince.addSoldiers(troopsToMove*-1);
                                             defendingProvince.addSoldiers(troopsToMove);
                                         }
+                                        
                                     }
                                 }
                                 else{
@@ -237,7 +262,17 @@ public class Game {
                                 }
                             }
                             if(gainCard){
-                                activePlayer.addCard(drawCard());
+                                HashSet<Card> newset = new HashSet<Card>();
+                                if(activePlayer.getCards() != null){
+                                    for(Card c: activePlayer.getCards()){
+                                        if(c != null){
+                                            newset.add(c);
+                                        }
+                                    }
+                                }
+                                
+                                newset.add(drawCard());
+                                activePlayer.setCards(newset);;
                             }
                             phasefinished = false;
         
@@ -252,15 +287,15 @@ public class Game {
                                     destinationProvince.addSoldiers(movingTroops);
                                     sourceProvince.addSoldiers(movingTroops*-1);
                                     phasefinished = true;
-                                    GL.LogMessage(Level.FINE, activePlayer.getName()+ " moved "+ String.valueOf(movingTroops)+ " from "+ sourceProvince.getName()+ " to "+ destinationProvince.getName());
+                                    //GL.LogMessage(Level.FINE, activePlayer.getName()+ " moved "+ String.valueOf(movingTroops)+ " from "+ sourceProvince.getName()+ " to "+ destinationProvince.getName());
                                 }
                                 else{
                                     phasefinished = true;
                                     if(action != null && action.getSourceProvince() != null && action.getTargetProvince() != null){
-                                        GL.LogMessage(Level.WARNING, activePlayer.getName()+ " tried an invalid movement after their turn. Attempted to move " + action.getnumMovingTroops() + " troops from " + action.getSourceProvince().getName() + " to " + action.getTargetProvince().getName() + ".");
+                                        //GL.LogMessage(Level.WARNING, activePlayer.getName()+ " tried an invalid movement after their turn. Attempted to move " + action.getnumMovingTroops() + " troops from " + action.getSourceProvince().getName() + " to " + action.getTargetProvince().getName() + ".");
                                     }
                                     else{
-                                        GL.LogMessage(Level.WARNING, activePlayer.getName()+ " tried an invalid movement after their turn. Source and/or target province was null.");
+                                        //GL.LogMessage(Level.WARNING, activePlayer.getName()+ " tried an invalid movement after their turn. Source and/or target province was null.");
                                     }
                                 }
                             }
@@ -284,16 +319,18 @@ public class Game {
                         winner = p;
                     }
                 }
-                GL.LogMessage(new LogRecord(Level.SEVERE, "Winner: " + winner.getName() + " Turn#: " + turnNum));
+                //GL.LogMessage(new LogRecord(Level.SEVERE, "Winner: " + winner.getName() + " Turn#: " + turnNum));
                 display.dispose();
-                return "Winner: " + winner.getName() + " Turn#: " + turnNum;
+                resultsofGame[0] = winner;
+                return resultsofGame;
+                //return "Winner: " + winner.getName() + " Turn#: " + turnNum;
             }
             else{
-                return "error";
+                return null;
             }
         }
         else{
-            return "Game already initialized.";
+            return null;
         }
         
     }
@@ -338,7 +375,7 @@ public class Game {
         for(Player p: players){
             if(p != null){
                 if(world.getProvinces().size() == p.getTerritory().size()){
-                    GL.LogMessage("gameover = true");
+                    //GL.LogMessage("gameover = true");
                     return true;
                 }
             }
@@ -375,8 +412,8 @@ public class Game {
     private Card drawCard(){
         int indexToDraw = rand.nextInt(cardsLeft); //Pick index
         Card returnCard = deck[indexToDraw]; //Save card
-        deck[indexToDraw] = deck[cardsLeft-1]; //Swap drawn card with last elem of list
-        cardsLeft--; //shrink deck to exclude drawn card
+        //deck[indexToDraw] = deck[cardsLeft-1]; //Swap drawn card with last elem of list
+        //cardsLeft--; //shrink deck to exclude drawn card
         return returnCard;
     }
 
@@ -566,14 +603,14 @@ public class Game {
 
             }
             catch(Exception e){
-                GL.LogMessage("Got error in actionIsValid DRAFT: " + e);
+                //GL.LogMessage("Got error in actionIsValid DRAFT: " + e);
                 return false;
             }
         }
         else if(type.equals("attacking")){
             try{
                 if(action == null){
-                    GL.LogMessage("ATTACK is null. Ending the attack phase");
+                    //GL.LogMessage("ATTACK is null. Ending the attack phase");
                     return false;
                 }
                 Player activePlayer = (Player) params[0];
@@ -585,7 +622,7 @@ public class Game {
                 //System.out.println(defendingProvince.getOwner() != activePlayer);
                 //System.out.println(attackingTroops < attackingProvince.getNumSoldiers());
                 if(command == null || attackingProvince == null || defendingProvince == null){
-                    GL.LogMessage("ATTACK is null. Ending the attack phase");
+                    //GL.LogMessage("ATTACK is null. Ending the attack phase");
                     return false;
                 }
                 if(attackingProvince.getOwner() == activePlayer && defendingProvince.getOwner() != activePlayer && attackingTroops > 0 && attackingTroops <= (attackingProvince.getNumSoldiers()-1)){
@@ -594,7 +631,7 @@ public class Game {
 
             }
             catch(Exception e){
-                GL.LogMessage("Got error in actionIsValid ATTACK: " + e);
+                //GL.LogMessage("Got error in actionIsValid ATTACK: " + e);
                 return false;
             }
         }
@@ -610,7 +647,7 @@ public class Game {
 
             }
             catch(Exception e){
-                GL.LogMessage(("Got error in actionIsValid MOVE-AFTER-CONQUER: " + e));
+                //GL.LogMessage(("Got error in actionIsValid MOVE-AFTER-CONQUER: " + e));
                 return false;
             }
         }
@@ -635,7 +672,7 @@ public class Game {
                             realProvinceSource = true;
                         }
                     }
-                GL.LogMessage("Real Destination: " + realProvinceDestination +" Real Source: "+ realProvinceSource);
+                //GL.LogMessage("Real Destination: " + realProvinceDestination +" Real Source: "+ realProvinceSource);
 
                 if(realProvinceDestination && realProvinceSource && source != destination && source.getOwner() == activePlayer &&
                 possibleDestinations(source).contains(destination) && source.getNumSoldiers() > movingTroops && movingTroops > 0){
@@ -644,7 +681,7 @@ public class Game {
 
             }
             catch(Exception e){
-                GL.LogMessage("Got error in actionIsValid MOVING: ");
+                //GL.LogMessage("Got error in actionIsValid MOVING: ");
                 return false;
             }
         }
@@ -685,7 +722,7 @@ public class Game {
 
             }
             catch(Exception e){
-                GL.LogMessage("Got error in actionIsValid TURN-IN-CARDS: " + e);
+                //GL.LogMessage("Got error in actionIsValid TURN-IN-CARDS: " + e);
                 return false;
             }
         }

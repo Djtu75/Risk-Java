@@ -6,25 +6,43 @@ import java.util.Random;
 import java.util.Set;
 
 import participant.*;
-import participant.ExamplePlayer2;
-import participant.OldExamplePlayer;
-import participant.PlayerLogic;
-public class Main {
+import participant.Entries.CooperPlayer;
+import participant.Entries.Genny;
+import participant.Entries.GoalPlayer;
+import participant.Entries.Jakefrozen;
+import participant.Entries.MatthewS;
+import participant.Entries.MyIllogic;
+import participant.Entries.MyPlayer;
+import participant.Entries.Zach_Player;
+import participant.Entries.ZacharyLogic;
+public class CompetitionRound2 {
 
     public static void main(String[] args){
-        System.out.println("test");
+        //System.out.println("test");
 
-        ExamplePlayer1 sl1 = new ExamplePlayer1();
-        ExamplePlayer1 sl2 = new ExamplePlayer1();
-        //ExamplePlayer1 sl3 = new ExamplePlayer1();
-        //ExamplePlayer1 sl4 = new ExamplePlayer1();
+        PlayerLogic[] competitors = {new CooperPlayer(), new Genny(), new GoalPlayer(), 
+        new Jakefrozen(), new MatthewS(), new MyIllogic(), new MyPlayer(), new Zach_Player(), new ZacharyLogic()};
 
-        //ExamplePlayer2 sl1 = new ExamplePlayer2();
-        //ExamplePlayer2 sl2 = new ExamplePlayer2();
-        ExamplePlayer2 sl3 = new ExamplePlayer2();
-        ExamplePlayer2 sl4 = new ExamplePlayer2();
+        //Hard Code
+        //PlayerLogic[] competitors = {new Jakefrozen(), new MyIllogic(), new MatthewS(), new CooperPlayer()};
 
-        PlayerLogic[] playerLogics = {sl1, sl2, sl3, sl4};
+        //Make games
+        PlayerLogic[] group1 = chooseCompetitors(competitors, 4);
+        for(PlayerLogic pl: group1){
+            for(int i = 0; i < competitors.length; i++){
+                if(competitors[i] == pl){
+                    competitors[i] = null;
+                }
+            }
+        }
+        
+        Player[] placement1 = runGame(group1, 100);
+        for(int i = 0; i < placement1.length; i++){
+            System.out.println((i + 1) + " place: " + placement1[i].getName());
+        }
+    }
+
+    public static Player[] runGame(PlayerLogic[] playerLogics, int startingtroops){
         Color[] defaultColors = {Color.BLACK, Color.BLUE, Color.CYAN, Color.GREEN, Color.LIGHT_GRAY, Color.MAGENTA, Color.ORANGE, Color.RED, Color.YELLOW, Color.PINK};
         Player[] players = new Player[playerLogics.length];
         for(int i = 0; i < playerLogics.length; i++){
@@ -98,9 +116,27 @@ public class Main {
 
         RenderEarth test = new RenderEarth(world.getGraphicProvinces(), backgroundImages, players, game);
 
-        Player[] result = game.startGame(4*25, test);
-        System.out.println("Result: " + result);
+        Player[] result = game.startGame(startingtroops, test);
         
+        return result;
+    }
+
+    public static PlayerLogic[] chooseCompetitors(PlayerLogic[] options, int numplayers){
+        Random rand = new Random();
+        PlayerLogic[] playerLogics = new PlayerLogic[numplayers];
+        for(int i = 0; i < numplayers; i++){
+            playerLogics[i] = null;
+            while(playerLogics[i] == null){
+                int num = rand.nextInt(options.length);
+                if(options[num] != null){
+                    playerLogics[i] = options[num];
+                    options[num] = null;
+                }
+                
+            }
+            
+        }
+        return playerLogics;
     }
 
 }

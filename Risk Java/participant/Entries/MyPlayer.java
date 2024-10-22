@@ -157,7 +157,9 @@ public class MyPlayer extends PlayerLogic {
 
 
         for(Card c : set){
-            types[c.getType()]++;
+            if(c != null){
+                types[c.getType()] ++;
+            }
         }
         int setType = 3;
         for(int i = 0; i < types.length; i++){

@@ -292,6 +292,27 @@ public class RenderEarth extends Frame {
             //graphObj.drawImage(profile, (startx)*(10), (starty + 10)*(10), getParent());
             //graphObj.scale(10, 10);
             graphObj.scale(width/58.0, height/58.0);
+            GeneralPath path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
+            path.moveTo((float) startx+58, (float) starty+4);
+            path.lineTo((float) startx+58, (float) starty+4 + (40));
+            path.lineTo((float) startx+58 + (40), (float) starty+4 + (40));
+            path.lineTo((float) startx+58 + (30), (float) starty+4);
+            path.lineTo((float) startx+58, (float) starty+4);
+            path.closePath();
+            Color[] playerColors = p.getColors();
+            if(playerColors[0] == null){
+                playerColors[0] = Color.BLACK;
+            }
+            if(playerColors[1] == null){
+                setPaintColor("lighten", playerColors[0], playerColors[1], startx+58, starty+4, startx+98, starty+4 + (40), graphObj);
+            }
+            else{
+                setPaintColor("gradient", playerColors[0], playerColors[1], startx+58, starty+4, startx+98, starty+4 + (40), graphObj);
+            }
+            
+            graphObj.fill(path);
+            graphObj.setColor(Color.BLACK);
+
             startx += 0;
             starty += profileAllowance;
         }
