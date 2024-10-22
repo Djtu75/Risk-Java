@@ -15,6 +15,7 @@ public class Example01 extends Frame {
     private static int windowHeight = 860;
 
     public static ArrayList<Integer> array = new ArrayList<Integer>();
+    /*
     private int[] alaska = {40, 203, 42, 199, 47, 195, 51, 194, 54, 190, 55, 182, 49, 180, 44, 180, 43, 173, 35, 170, 35, 166, 33, 160, 38, 153, 57, 154, 58, 147, 45, 146, 43, 144, 46, 135, 52, 136, 57, 139, 64, 135, 66, 132, 61, 130, 59, 122, 54, 121, 58, 117, 70, 110, 78, 104, 83, 104, 84, 111, 90, 110, 93, 114, 99, 116, 110, 117, 116, 119, 115, 130, 116, 142, 116, 150, 115, 158, 115, 172, 117, 175, 128, 174, 131, 182, 133, 197, 141, 203, 138, 210, 134, 214, 129, 202, 125, 192, 118, 186, 110, 179, 102, 177, 93, 178, 84, 183, 86, 172, 81, 170, 73, 174, 61, 188, 57, 194, 51, 198, 48, 202, 44, 203};
     private int[] northwestCan = {118, 170, 118, 162, 119, 151, 119, 142, 119, 133, 119, 126, 120, 119, 128, 120, 137, 121, 148, 121, 158, 120, 165, 120, 170, 115, 172, 115, 180, 112, 181, 113, 179, 119, 188, 118, 195, 122, 198, 126, 204, 123, 203, 131, 212, 132, 219, 132, 229, 132, 230, 131, 230, 124, 236, 127, 244, 128, 245, 128, 248, 127, 251, 126, 253, 123, 253, 120, 255, 119, 258, 126, 266, 126, 266, 122, 266, 119, 267, 112, 268, 110, 269, 102, 272, 98, 274, 94, 278, 90, 284, 90, 278, 97, 274, 102, 274, 108, 277, 115, 278, 120, 281, 125, 282, 125, 285, 123, 286, 126, 294, 130, 298, 129, 299, 123, 302, 133, 290, 142, 284, 147, 279, 156, 277, 157, 267, 162, 264, 170, 260, 172, 257, 176, 257, 178, 254, 172, 240, 170, 232, 170, 226, 170, 209, 171, 190, 171, 170, 170, 158, 168, 142, 170, 120, 168};
     private int[] alberta = {134, 220, 138, 214, 140, 211, 143, 203, 143, 201, 138, 198, 135, 197, 136, 187, 136, 182, 135, 180, 132, 174, 141, 174, 146, 175, 152, 175, 166, 174, 175, 175, 186, 176, 226, 177, 226, 189, 225, 196, 226, 207, 226, 223, 225, 238, 225, 250, 225, 252, 213, 251, 202, 250, 186, 250, 176, 250, 165, 249, 157, 249, 151, 249, 150, 249, 146, 242, 143, 234, 138, 226, 136, 220};
@@ -58,7 +59,7 @@ public class Example01 extends Frame {
     private int[] papa = {1010, 554, 1009, 544, 1005, 538, 1005, 531, 1013, 527, 1021, 533, 1022, 546, 1031, 546, 1034, 535, 1040, 532, 1058, 542, 1061, 550, 1070, 550, 1069, 559, 1080, 565, 1074, 570, 1089, 590, 1085, 592, 1075, 590, 1069, 578, 1058, 578, 1058, 585, 1042, 585, 1037, 579, 1029, 578, 1034, 568, 1034, 560, 1030, 557, 1026, 556, 1020, 552, 1013, 555, 1007, 554, 1007, 544, 1005, 537};
     private int[] indo = {964, 542, 971, 546, 977, 554, 971, 555, 969, 562, 973, 578, 966, 582, 967, 588, 972, 589, 978, 581, 998, 574, 999, 576, 996, 582, 992, 585, 981, 586, 984, 590, 991, 590, 990, 593, 984, 593, 982, 596, 982, 603, 988, 604, 986, 608, 990, 614, 988, 619, 984, 610, 979, 608, 978, 612, 975, 619, 972, 618, 976, 595, 971, 591, 967, 591, 966, 599, 962, 606, 950, 606, 942, 602, 936, 593, 926, 594, 924, 597, 926, 601, 931, 601, 934, 606, 932, 611, 939, 612, 941, 618, 946, 627, 962, 626, 978, 630, 982, 635, 941, 632, 943, 630, 935, 624, 932, 626, 924, 619, 914, 600, 909, 599, 905, 589, 892, 571, 885, 566, 888, 559, 897, 560, 917, 582, 926, 589, 938, 589, 938, 575, 950, 567, 960, 546, 965, 542};
     private int[][] worldGraphics = {alaska, northwestCan, alberta, ontario, easternCan, greenland, centralamer, westernUS, easternUS, venezuela, peru, brazil, argentina, iceland, uk, scandinavia, russia, northeu, westeu, southeu, westafr, egypt, eastafr, centafr, southafr, mad, mideast, ural, afga, india, china, southasia, siberia, yak, kam, irk, mong, jap, eastau, westau, papa, indo};
-
+    */
     public static void main(String args[]){
         Example01 test = new Example01();
     }
@@ -122,7 +123,7 @@ public class Example01 extends Frame {
     public BufferedImage getImg(){
         BufferedImage img = null;
             try {
-                img = ImageIO.read(new File("Risk Java\\util\\worldimg.png"));
+                img = ImageIO.read(new File("Risk Java\\util\\oklahoma-county-map.png"));
             } catch (IOException e) {
                 System.out.println("got error" + e);
             }
@@ -234,10 +235,20 @@ public class Example01 extends Frame {
 
     public void paint(Graphics g) {
         //g.clearRect(0, 0, windowWidth, windowHeight);
-        g.drawImage(getImg(), 0, -15, getParent());
+       
+        //g.drawImage(getImg(), 0, -15, getParent());
         Graphics2D g2d = (Graphics2D)g;
+        Image profile = getImg();
+        int width = profile.getWidth(getParent());
+        int height = profile.getHeight(getParent());
+        g2d.scale((double)windowWidth/width, (double)windowHeight/height);
+        //graphObj.scale(0.1, 0.1);
+        g2d.drawImage(profile, 0, 0, getParent());
+        //graphObj.drawImage(profile, (startx)*(10), (starty + 10)*(10), getParent());
+        //graphObj.scale(10, 10);
+        g2d.scale((double)width/windowWidth, (double)height/windowHeight);
         Color[] colors = {Color.green, Color.blue, Color.red, Color.yellow, Color.orange, Color.magenta, Color.pink, Color.cyan, Color.gray};
-        renderWorldWithRects(worldGraphics, colors, g2d);
+        renderWorldWithRects(null, colors, g2d);
         Player[] test = {new Player("dude", null), new Player("guy", null)};
         renderPlayerList(test, 20, 260, 0, 15, g2d);
         //g2d.clearRect(0, 0, 1152, 800);

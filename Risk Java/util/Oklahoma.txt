@@ -1,0 +1,105 @@
+World{name: Oklahoma}
+Province{name: Central_America | adjacent: Eastern_United_States, Venezuela, Western_United_States}
+Province{name: Russia | adjacent: Northern_Europe, Ural, Scandinavia, Southern_Europe, Middle_East, Afghanistan}
+Province{name: Siberia | adjacent: China, Mongolia, Yakutsk, Ural, Irkutsk}
+Province{name: Northern_Europe | adjacent: Russia, Southern_Europe, Scandinavia, United_Kingdom, Western_Europe}
+Province{name: China | adjacent: Mongolia, India, Siberia, Southeast_Asia, Ural, Afghanistan}
+Province{name: Yakutsk | adjacent: Siberia, Kamchatka, Irkutsk}
+Province{name: South_Africa | adjacent: East_Africa, Madagascar, Central_Africa}
+Province{name: Ontario | adjacent: Northwest_Territory, Alberta, Eastern_Canada, Eastern_United_States, Greenland, Western_United_States}
+Province{name: Madagascar | adjacent: East_Africa, South_Africa}
+Province{name: Middle_East | adjacent: East_Africa, India, Russia, Egypt, Southern_Europe, Afghanistan}
+Province{name: Iceland | adjacent: Greenland, United_Kingdom, Scandinavia}
+Province{name: Central_Africa | adjacent: East_Africa, South_Africa, West_Africa}
+Province{name: Indonesia | adjacent: New_Guinea, Southeast_Asia, Western_Australia}
+Province{name: Western_Europe | adjacent: Northern_Europe, Southern_Europe, United_Kingdom, West_Africa}
+Province{name: Brazil | adjacent: Argentina, Peru, Venezuela, West_Africa}
+Province{name: Argentina | adjacent: Brazil, Peru}
+Province{name: Eastern_United_States | adjacent: Ontario, Eastern_Canada, Central_America, Western_United_States}
+Province{name: Southeast_Asia | adjacent: China, Indonesia, India}
+Province{name: India | adjacent: China, Southeast_Asia, Afghanistan, Middle_East}
+Province{name: Scandinavia | adjacent: Iceland, Northern_Europe, Russia, United_Kingdom}
+Province{name: Mongolia | adjacent: China, Japan, Siberia, Kamchatka, Irkutsk}
+Province{name: Eastern_Canada | adjacent: Ontario, Eastern_United_States, Greenland}
+Province{name: Alaska | adjacent: Northwest_Territory, Alberta, Kamchatka}
+Province{name: Venezuela | adjacent: Brazil, Central_America, Peru}
+Province{name: East_Africa | adjacent: South_Africa, Madagascar, Central_Africa, Egypt, Middle_East, West_Africa}
+Province{name: Japan | adjacent: Mongolia, Kamchatka}
+
+Continent{name: Adair | provs: prov1, prov2, prov3, prov4 | bonus: 2}
+Continent{name: Alfalfa | provs: prov5, prov6, prov7, prov8 | bonus: 2}
+Continent{name: Atoka | provs: prov9, prov10, prov11, prov12 | bonus: 2}
+Continent{name: Beaver | provs: prov13, prov14, prov15, prov16 | bonus: 2}
+Continent{name: Beckham | provs: prov17, prov18, prov19, prov20 | bonus: 2}
+Continent{name: Blaine | provs: prov21, prov22, prov23, prov24 | bonus: 2}
+Continent{name: Bryan | provs: prov25, prov26, prov27, prov28 | bonus: 2}
+Continent{name: Caddo | provs: prov29, prov30, prov31, prov32 | bonus: 2}
+Continent{name: Canadian | provs: prov33, prov34, prov35, prov36 | bonus: 2}
+Continent{name: Carter | provs: prov37, prov38, prov39, prov40 | bonus: 2}
+Continent{name: Cherokee | provs: prov41, prov42, prov43, prov44 | bonus: 2}
+Continent{name: Choctaw | provs: prov45, prov46, prov47, prov48 | bonus: 2}
+Continent{name: Cimarron | provs: prov49, prov50, prov51, prov52 | bonus: 2}
+Continent{name: Cleveland | provs: prov53, prov54, prov55, prov56 | bonus: 2}
+Continent{name: Coal | provs: prov57, prov58, prov59, prov60 | bonus: 2}
+Continent{name: Comanche | provs: prov61, prov62, prov63, prov64 | bonus: 2}
+Continent{name: Cotton | provs: prov65, prov66, prov67, prov68 | bonus: 2}
+Continent{name: Craig | provs: prov69, prov70, prov71, prov72 | bonus: 2}
+Continent{name: Creek | provs: prov73, prov74, prov75, prov76 | bonus: 2}
+Continent{name: Custer | provs: prov77, prov78, prov79, prov80 | bonus: 2}
+Continent{name: Delaware | provs: prov81, prov82, prov83, prov84 | bonus: 2}
+Continent{name: Dewey | provs: prov85, prov86, prov87, prov88 | bonus: 2}
+Continent{name: Ellis | provs: prov89, prov90, prov91, prov92 | bonus: 2}
+Continent{name: Garfield | provs: prov93, prov94, prov95, prov96 | bonus: 2}
+Continent{name: Garvin | provs: prov97, prov98, prov99, prov100 | bonus: 2}
+Continent{name: Grady | provs: prov101, prov102, prov103, prov104 | bonus: 2}
+Continent{name: Grant | provs: prov105, prov106, prov107, prov108 | bonus: 2}
+Continent{name: Greer | provs: prov109, prov110, prov111, prov112 | bonus: 2}
+Continent{name: Harmon | provs: prov113, prov114, prov115, prov116 | bonus: 2}
+Continent{name: Harper | provs: prov117, prov118, prov119, prov120 | bonus: 2}
+Continent{name: Haskell | provs: prov121, prov122, prov123, prov124 | bonus: 2}
+Continent{name: Hughes | provs: prov125, prov126, prov127, prov128 | bonus: 2}
+Continent{name: Jackson | provs: prov129, prov130, prov131, prov132 | bonus: 2}
+Continent{name: Jefferson | provs: prov133, prov134, prov135, prov136 | bonus: 2}
+Continent{name: Johnston | provs: prov137, prov138, prov139, prov140 | bonus: 2}
+Continent{name: Kay | provs: prov141, prov142, prov143, prov144 | bonus: 2}
+Continent{name: Kingfisher | provs: prov145, prov146, prov147, prov148 | bonus: 2}
+Continent{name: Kiowa | provs: prov149, prov150, prov151, prov152 | bonus: 2}
+Continent{name: Latimer | provs: prov153, prov154, prov155, prov156 | bonus: 2}
+Continent{name: Le Flore | provs: prov157, prov158, prov159, prov160 | bonus: 2}
+Continent{name: Lincoln | provs: prov161, prov162, prov163, prov164 | bonus: 2}
+Continent{name: Logan | provs: prov165, prov166, prov167, prov168 | bonus: 2}
+Continent{name: Love | provs: prov169, prov170, prov171, prov172 | bonus: 2}
+Continent{name: Major | provs: prov173, prov174, prov175, prov176 | bonus: 2}
+Continent{name: Marshall | provs: prov177, prov178, prov179, prov180 | bonus: 2}
+Continent{name: Mayes | provs: prov181, prov182, prov183, prov184 | bonus: 2}
+Continent{name: McClain | provs: prov185, prov186, prov187, prov188 | bonus: 2}
+Continent{name: McCurtain | provs: prov189, prov190, prov191, prov192 | bonus: 2}
+Continent{name: McIntosh | provs: prov193, prov194, prov195, prov196 | bonus: 2}
+Continent{name: Murray | provs: prov197, prov198, prov199, prov200 | bonus: 2}
+Continent{name: Muskogee | provs: prov201, prov202, prov203, prov204 | bonus: 2}
+Continent{name: Noble | provs: prov205, prov206, prov207, prov208 | bonus: 2}
+Continent{name: Nowata | provs: prov209, prov210, prov211, prov212 | bonus: 2}
+Continent{name: Okfuskee | provs: prov213, prov214, prov215, prov216 | bonus: 2}
+Continent{name: Oklahoma | provs: prov217, prov218, prov219, prov220 | bonus: 2}
+Continent{name: Okmulgee | provs: prov221, prov222, prov223, prov224 | bonus: 2}
+Continent{name: Osage | provs: prov225, prov226, prov227, prov228 | bonus: 2}
+Continent{name: Ottawa | provs: prov229, prov230, prov231, prov232 | bonus: 2}
+Continent{name: Pawnee | provs: prov233, prov234, prov235, prov236 | bonus: 2}
+Continent{name: Payne | provs: prov237, prov238, prov239, prov240 | bonus: 2}
+Continent{name: Pittsburg | provs: prov241, prov242, prov243, prov244 | bonus: 2}
+Continent{name: Pontotoc | provs: prov245, prov246, prov247, prov248 | bonus: 2}
+Continent{name: Pottawatomie | provs: prov249, prov250, prov251, prov252 | bonus: 2}
+Continent{name: Pushmataha | provs: prov253, prov254, prov255, prov256 | bonus: 2}
+Continent{name: Roger Mills | provs: prov257, prov258, prov259, prov260 | bonus: 2}
+Continent{name: Rogers | provs: prov261, prov262, prov263, prov264 | bonus: 2}
+Continent{name: Seminole | provs: prov265, prov266, prov267, prov268 | bonus: 2}
+Continent{name: Sequoyah | provs: prov269, prov270, prov271, prov272 | bonus: 2}
+Continent{name: Stephens | provs: prov273, prov274, prov275, prov276 | bonus: 2}
+Continent{name: Texas | provs: prov277, prov278, prov279, prov280 | bonus: 2}
+Continent{name: Tillman | provs: prov281, prov282, prov283, prov284 | bonus: 2}
+Continent{name: Tulsa | provs: prov285, prov286, prov287, prov288 | bonus: 2}
+Continent{name: Wagoner | provs: prov289, prov290, prov291, prov292 | bonus: 2}
+Continent{name: Washington | provs: prov293, prov294, prov295, prov296 | bonus: 2}
+Continent{name: Washita | provs: prov297, prov298, prov299, prov300 | bonus: 2}
+Continent{name: Woods | provs: prov301, prov302, prov303, prov304 | bonus: 2}
+Continent{name: Woodward | provs: prov305, prov306, prov307, prov308 | bonus: 2}

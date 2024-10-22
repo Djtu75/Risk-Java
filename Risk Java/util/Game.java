@@ -89,7 +89,7 @@ public class Game {
                 //Scanner scnr = new Scanner(System.in);
                 boolean firstTurn = true;
                 display.refreshPaint(display.getGraphics());
-                wait(7000);
+                wait(70);
                 while(!gameOver){ //Main game loop |Needs mechanism to ignore/eliminate players who have lost all territory
                     //String s = scnr.next();
                     GL.LogMessage(new LogRecord(Level.INFO, "IT IS TURN NUMBER: "+ turnNum));
@@ -223,6 +223,9 @@ public class Game {
                                             GL.LogMessage(attackingProvince.getOwner().getName()+ " has moved "+ troopsToMove + " into "+ defendingProvince.getName());
                                         }
                                         else{ //If invalid input, move minimum number of troops
+                                            if(attackingTroops > 3){
+                                                attackingTroops = 3;
+                                            }
                                             int troopsToMove = attackingTroops - result[1];
                                             attackingProvince.addSoldiers(troopsToMove*-1);
                                             defendingProvince.addSoldiers(troopsToMove);
@@ -253,7 +256,7 @@ public class Game {
                                 }
                                 else{
                                     phasefinished = true;
-                                    if(action.getSourceProvince() != null && action.getTargetProvince() != null){
+                                    if(action != null && action.getSourceProvince() != null && action.getTargetProvince() != null){
                                         GL.LogMessage(Level.WARNING, activePlayer.getName()+ " tried an invalid movement after their turn. Attempted to move " + action.getnumMovingTroops() + " troops from " + action.getSourceProvince().getName() + " to " + action.getTargetProvince().getName() + ".");
                                     }
                                     else{
@@ -265,7 +268,7 @@ public class Game {
                             activePlayer.getLogic().endTurn(new Snapshot(this, world, players, activePlayer, activePlayer.getCards(), calcCardTurnIn())); //Signal to player that their turn is ending
                             firstTurn = false;
                         }
-                        wait(500);
+                        wait(50);
                         if((turnNum % 500) == 0){
                             display.repaint();
                         }
@@ -511,7 +514,7 @@ public class Game {
         }
         sort(offenders);
 
-        for(int i = 0; i < defendingTroops; i++){ //Rolls dice
+        for(int i = 0; (i < defendingTroops && i < offendingTroops); i++){ //Rolls dice
             if(offenders[i] > defenders[i]){
                 result[0] += 1;
             }
